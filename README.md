@@ -9,8 +9,8 @@
 ## 快速使用
 简单的接入文档
 
-- 使用文件
-- 为此开发文档
+- [使用文件](./doc/use/PEADME.md)
+- [二次开发文档](./doc/dev/ReADME.md)
 
 ## 交流 & 提问
 https://github.com/Hansen1994/hansen-tool/issues
