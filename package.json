@@ -1,8 +1,10 @@
 {
   "name": "hansen-tool",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "description": "hansen的工具集",
-  "main": "src/index.js",
+  "main": "release/index.esm-bundler.js",
+  "module": "release/index.js",
+  "unpkg": "release/index.global.js",
   "scripts": {
     "node": "node examples/server.js",
     "dev": "node ./script/dev.js runtime -f global -s",
@@ -10,7 +12,6 @@
     "build:esm-bundler": "node ./script/pro.js -f esm-bundler",
     "build:cjs": "node ./script/pro.js -f cjs",
     "release": "pnpm build:global & pnpm build:esm-bundler & pnpm build:cjs"
-
   },
   "repository": {
     "type": "git",
