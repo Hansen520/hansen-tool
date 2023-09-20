@@ -11,7 +11,7 @@
 ## 安装下载
 - 下载地址 https://github.com/Hansen520/hansen-tool/releases
 - npm地址 npm i hansen-tool
-- CDN http://unpkg.com/hansen-tool/dist/bundle.js
+- CDN http://unpkg.com/hansen-tool@0.0.1/release/bundle.js
 
 ## 快速使用
 简单的接入文档

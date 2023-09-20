@@ -35,8 +35,8 @@
     "前端工具集合"
   ],
   "ext": "js, json",
-  "author": "",
-  "license": "MIT",
+  "author": "JinHanSheng",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Hansen520/hansen-tool/issues"
   },
