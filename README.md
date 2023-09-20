@@ -9,9 +9,9 @@
 特色（推广的一些亮点）
 
 ## 安装下载
-- 下载地址 https://github.com/Hansen520/hansen-tool/releases
+- 下载地址 https://github.com/Hansen520/hansen-tool/dist/index.js
 - npm地址 npm i hansen-tool
-- CDN http://unpkg.com/hansen-tool/release/bundle.js
+- CDN http://unpkg.com/hansen-tool/dist/index.js
 
 ## 快速使用
 简单的接入文档
