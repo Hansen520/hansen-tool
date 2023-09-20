@@ -19,15 +19,15 @@ const packageConfigs = packageFormats || pkg.buildOptions.formats;
 
 const outputConfig = {
   'esm-bundler': {
-    file: path.resolve(`dist/${name}.esm-bundler.js`),
+    file: path.resolve(`release/${name}.esm-bundler.js`),
     format: 'es',
   },
   cjs: {
-    file: path.resolve(`dist/${name}.js`),
+    file: path.resolve(`release/${name}.js`),
     format: 'cjs',
   },
   global: {
-    file: path.resolve(`dist/${name}.global.js`),
+    file: path.resolve(`release/${name}.global.js`),
     format: 'iife',
   },
 };
