@@ -1,9 +1,9 @@
 {
   "name": "hansen-tool",
-  "version": "0.1.6",
-  "description": "hansen的工具集",
-  "main": "release/index.esm-bundler.js",
-  "module": "release/index.js",
+  "version": "0.1.7",
+  "description": "web的一些工具集函数",
+  "main": "release/index.js",
+  "module": "release/index.esm-bundler.js",
   "unpkg": "release/index.global.js",
   "scripts": {
     "node": "node examples/server.js",

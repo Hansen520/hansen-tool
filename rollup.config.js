@@ -3,7 +3,7 @@
  * @Description: description
  */
 import path from 'path';
-// import ts from 'rollup-plugin-typescript2';
+import ts from 'rollup-plugin-typescript2';
 import json from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -45,10 +45,10 @@ function createConfig(format, output) {
   return {
     // 导出rollup的配置
     // input: resolve('src/index.ts'),
-    input: path.resolve('src/index.js'),
+    input: path.resolve('src/index.ts'),
     output,
     external,
-    plugins: [json(), commonjs(), nodeResolve()],
+    plugins: [json(), ts(), commonjs(), nodeResolve()],
   };
 }
 
