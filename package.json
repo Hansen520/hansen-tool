@@ -1,36 +1,70 @@
 {
   "name": "hansen-tool",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "hansen的工具集",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "webpack --mode=development",
-    "example": "http-server -p 8880"
+    "node": "node examples/server.js",
+    "dev": "node ./script/dev.js runtime -f global -s",
+    "build:global": "node ./script/pro.js -f global",
+    "build:esm-bundler": "node ./script/pro.js -f esm-bundler",
+    "build:cjs": "node ./script/pro.js -f cjs",
+    "release": "pnpm build:global & pnpm build:esm-bundler & pnpm build:cjs"
+
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hansen1994/hansen-tool.git"
+    "url": "git+https://github.com/Hansen520/hansen-tool.git"
+  },
+  "restartable": "qq",
+  "verbose": true,
+  "colours": true,
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules",
+      "dist"
+    ],
+    "delay": "2500",
+    "watch": [
+      "app.js",
+      "src"
+    ]
   },
   "keywords": [
-    "tool"
+    "tool",
+    "前端工具集合"
   ],
+  "ext": "js, json",
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Hansen1994/hansen-tool/issues"
+    "url": "https://github.com/Hansen520/hansen-tool/issues"
   },
-  "homepage": "https://github.com/Hansen1994/hansen-tool#readme",
+  "homepage": "https://github.com/Hansen520/hansen-tool#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-latest": "^6.24.1",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "atob": "^2.1.2",
+    "body-parser": "^1.20.0",
+    "connect-multiparty": "^2.2.0",
+    "cookie-parser": "^1.4.6",
+    "execa": "4",
+    "express": "^4.18.1",
+    "minimist": "^1.2.6",
+    "rollup": "^2.77.2",
+    "rollup-plugin-typescript2": "^0.32.1",
+    "ts-loader": "^9.3.1",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.3",
+    "tslint-loader": "^3.5.4",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74.0",
+    "webpack-dev-middleware": "^5.3.3",
+    "webpack-hot-middleware": "^2.25.1"
   },
   "dependencies": {
+    "lodash-es": "^4.17.21",
     "user": "0.0.0"
   }
 }

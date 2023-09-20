@@ -1,100 +1,53 @@
-        run(5);
-        function run(num) {
-           
-            const frag = document.createDocumentFragment()
-            //产生10个div，一开始的运动
-            for (var i = 0;i < num;i++) {
-                var odiv = document.createElement("div");
-                odiv.className = 'ball';
-                odiv.style.background= randomRgbColor();
-                odiv.leftVal = 1 + i;//设置自定义属性初始值，并设置其left的变化量，这个也和球移动的角度有关
-                odiv.topVal = 1 + i;//设置自定义属性初始值，并设置其top的变化量，这个也和球移动的角度有关
-                frag.appendChild(odiv)
-            }
-            document.body.appendChild(frag)
+/*
+ * @Date: 2023-09-20 10:16:06
+ * @Description: description
+ */
+import { sum } from 'lodash-es';
+/**
+ * @description 获取rgb随机颜色值
+ * @type
+ * @default
+ * @example randomRgbColor()
+ */
+export const randomRgbColor = () => {
+  const r = Math.floor(Math.random() * 100 + 100);
+  const g = Math.floor(Math.random() * 100 + 20);
+  const b = Math.floor(Math.random() * 255);
+  return `rgb(${r},${g},${b})`;
+};
 
-            var oball = document.querySelectorAll(".ball");
-            //可视区宽高
-            var maxW = document.documentElement.clientWidth - oball[0].clientWidth;//文档的宽减去球的宽度就是球移动的宽度
-            var maxH = document.documentElement.clientHeight - oball[0].clientHeight;//文档的高减去球的高度就是球移动的高度
+/**
+ * @description 金额逗号分隔
+ * @type
+ * @default
+ * @example 1314520.86 => 1,314,520.86
+ */
+export const formatPrice = (number) => {
+  if (!number) return 0;
+  let n = number;
+  let r = "";
+  let temp;
+  do {
+    // 求模的值， 用于获取高三位，这里可能有小数
+    let mod = n % 1000;
+    // 值是不是大于1，是继续的条件
+    n = n / 1000;
+    // 高三位
+    temp = ~~mod;
+    // 1.填充: n > 1 循环未结束， 就要填充为比如 1 => 001
+    // 不然temp = ~~mod的时候, 1 001， 就会变成 "11"
+    // 2.拼接“,”
+    r = (n >= 1 ? `${temp}`.padStart(3, "0") : temp) + (!!r ? "," + r : "");
+  } while (n >= 1);
+  const strNumber = number + "";
+  let index = strNumber.indexOf(".");
+  // 拼接小数部分
+  if (index >= 0) {
+    r += strNumber.substring(index);
+  }
+  return r;
+};
 
-
-            //当浏览器高度发生改变时，重新计算高度，宽度值
-            window.onresize = function () {
-                var maxW = document.documentElement.clientWidth - oball[0].clientWidth;//文档的宽减去球的宽度就是球移动的宽度
-                var maxH = document.documentElement.clientHeight - oball[0].clientHeight;//文档的高减去球的高度就是球移动的高度
-            }
-
-            //碰撞第一次后的运动
-            player();
-            function player() {
-                
-                for (var i = 0; i < num; i++) {
-                    var aball = oball[i];
-                    // 元素距离左、顶端距离
-                    var sleft = aball.offsetLeft,
-                        stop = aball.offsetTop;
-                        // console.log(sleft,stop)
-                    var left = sleft + aball.leftVal,
-                        top = stop + aball.topVal;
-
-                    //一种限定的写法
-                    if(left > maxW || left < 0){
-                        left = Math.min(maxW , left);//8 5→5 0→0
-                        left = Math.max(left , 0);
-                        aball.leftVal = -aball.leftVal;//反弹
-                        document.body.bgColor = randomRgbColor2()
-                        aball.style.background = randomRgbColor();
-                    }
-
-                    if(top > maxH || top < 0){
-                        top = Math.min(maxH , top);//8 5→5 0→0
-                        top = Math.max(top , 0);
-                        aball.topVal = -aball.topVal;//反弹
-                        document.body.bgColor = randomRgbColor2()
-                        aball.style.background= randomRgbColor();
-                    }
-
-/*                    if (left > maxW){
-                        left = maxW;
-                        aball.leftVal = - aball.leftVal;//反弹
-                    }
-                    if (left < 0){
-                        left = 0;
-                        aball.leftVal = - aball.leftVal;//反弹
-                    }
-                    if (top > maxH){
-                        top = maxH;
-                        aball.topVal = - aball.topVal;//反弹
-                    }
-                    if (top < 0){
-                        top = 0;
-                        aball.topVal = -aball.topVal;//反弹
-                    }*/
-                    aball.style.left = left + 'px';
-                    aball.style.top = top + 'px';
-                }
-                requestAnimationFrame(player);
-            }
-        }
-
-
-        function randomRgbColor() {
-            var r = Math.floor(Math.random() * 255);
-            var g = Math.floor(Math.random() * 255);
-            var b = Math.floor(Math.random() * 255);
-
-            return "radial-gradient(rgb(255,255,255),rgb("+r+","+g+","+b+"))";
-
-            //return "rgb("+r+","+g+","+b+")";
-        }
-
-        function randomRgbColor2() {
-            var r = Math.floor(Math.random() * 100 + 100);
-            var g = Math.floor(Math.random() * 100 + 20);
-            var b = Math.floor(Math.random() * 255);
-
-            return "rgb("+r+","+g+","+b+")";
-
-            //return "rgb("+r+","+g+","+b+")";
-        }
+export const test = () => {
+  console.log(sum[(1, 2)]);
+};
