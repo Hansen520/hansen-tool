@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-09-20 10:16:06
- * @Description: description
+ * @Description: rollup.config.js 的配置项
  */
 import path from 'path';
 import ts from 'rollup-plugin-typescript2';

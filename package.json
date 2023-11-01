@@ -1,6 +1,6 @@
 {
   "name": "hansen-tool",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "description": "web的一些工具集函数",
   "main": "release/index.js",
   "module": "release/index.esm-bundler.js",
