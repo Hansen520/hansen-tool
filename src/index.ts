@@ -1,6 +1,7 @@
 import { isArray } from "lodash-es";
-import { requestUserProfile, pLimitAsync } from "./asyncPool";
+import pLimitAsync from "./asyncPool";
 
+pLimitAsync()
 /**
  * @description 获取rgb随机颜色值
  * @type
@@ -336,4 +337,4 @@ export const findParentNodeArray = (array: any[], parentSubjectCode, period: str
   return parentSubjectStock.map((item) => item[period]);
 };
 
-export { requestUserProfile, pLimitAsync };
+export { pLimitAsync };

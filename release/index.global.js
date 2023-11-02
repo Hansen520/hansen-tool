@@ -18078,129 +18078,167 @@
       lodash.prototype[symIterator] = seq.toIterator;
     }
 
-    /**
-     * 多组数据的并发请求
-     * @param uid uid
-     * @param max 最多并发请求数量
-     * @param fn 请求的函数
-     * @example requestUserProfile(1, () => {})('226')
-     */
-    var requestUserProfile = function (max, fn) {
-        if (max === void 0) { max = 2; }
-        /* 缓存resolve */
-        var promiseArr = [];
-        /* 当前的请求数量 */
-        var requestCount = 0;
-        /* 执行下一个请求 */
-        var execNext = function (uid) { return __awaiter(void 0, void 0, void 0, function () {
-            var error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, 3, 4]);
-                        requestCount++;
-                        return [4 /*yield*/, fn(uid)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        error_1 = _a.sent();
-                        console.error(error_1);
-                        return [3 /*break*/, 4];
-                    case 3:
-                        requestCount--;
-                        promiseArr.length && promiseArr.shift()(); // 执行下一个请求
-                        return [7 /*endfinally*/];
-                    case 4: return [2 /*return*/];
-                }
-            });
-        }); };
-        return function (uid) {
-            if (uid === void 0) { uid = "1"; }
-            return __awaiter(void 0, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    if (requestCount < max) {
-                        return [2 /*return*/, execNext(uid)];
-                    }
-                    else {
-                        /* 生成一个 pending 状态的 promise，等待前面的请求完成后执行 */
-                        return [2 /*return*/, new Promise(function (resolve) { return promiseArr.push(resolve); }).then(function () {
-                                execNext(uid);
-                            })];
-                    }
-                });
-            });
-        };
-    };
-    /**
-     * 多组数据的并发请求
-     * @param uid uid
-     * @param max 最多并发请求数量
-     * @param fn 请求的函数
-     * @example requestUserProfile(1, () => {})('226')
-     */
-    var pLimitAsync = function (concurrency) {
-        var queue = [];
-        var activeCount = 0;
-        var next = function () {
-            activeCount--;
-            if (queue.length > 0) {
-                queue.shift()();
-            }
-        };
-        var run = function (fn, resolve) {
-            var args = [];
-            for (var _i = 2; _i < arguments.length; _i++) {
-                args[_i - 2] = arguments[_i];
-            }
-            return __awaiter(void 0, void 0, void 0, function () {
-                var result;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            activeCount++;
-                            result = (function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-                                return [2 /*return*/, fn.apply(void 0, args)];
-                            }); }); })();
-                            resolve(result);
-                            _b.label = 1;
-                        case 1:
-                            _b.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, result];
-                        case 2:
-                            _b.sent();
-                            return [3 /*break*/, 4];
-                        case 3:
-                            _b.sent();
-                            return [3 /*break*/, 4];
-                        case 4:
-                            next();
-                            return [2 /*return*/];
-                    }
-                });
-            });
-        };
-        var enqueue = function (fn, resolve) {
-            var args = [];
-            for (var _i = 2; _i < arguments.length; _i++) {
-                args[_i - 2] = arguments[_i];
-            }
-            queue.push(run.bind.apply(run, __spreadArray([null, fn, resolve], args, false)));
-            if (activeCount < concurrency && queue.length > 0) {
-                queue.shift()();
-            }
-        };
-        var generator = function (fn) {
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
+    //   /* 缓存resolve */
+    //   const promiseArr: any = [];
+    //   /* 当前的请求数量 */
+    //   let requestCount = 0;
+    //   /* 执行下一个请求 */
+    //   const execNext = async (uid: string) => {
+    //     try {
+    //       requestCount++;
+    //       return await fn(uid);
+    //     } catch (error) {
+    //       console.error(error);
+    //     } finally {
+    //       requestCount--;
+    //       promiseArr.length && promiseArr.shift()(); // 执行下一个请求
+    //     }
+    //   };
+    //   return async (uid: string = "1") => {
+    //     if (requestCount < max) {
+    //       return execNext(uid);
+    //     } else {
+    //       /* 生成一个 pending 状态的 promise，等待前面的请求完成后执行 */
+    //       return new Promise((resolve) => promiseArr.push(resolve)).then(() => {
+    //         execNext(uid);
+    //       });
+    //     }
+    //   };
+    // };
+    // 核心用户请求(异步请求)
+    var _requestTime = 0;
+    var requestProfile = function (uid) {
+        return Promise.resolve().then(function () {
             return new Promise(function (resolve) {
-                enqueue.apply(void 0, __spreadArray([fn, resolve], args, false));
+                setTimeout(function () {
+                    resolve();
+                }, 1000);
+            }).then(function () {
+                _requestTime++;
+                console.log(_requestTime, 122);
+                return {
+                    uid: uid,
+                    nick: "nick-".concat(uid),
+                    age: "18"
+                };
             });
-        };
-        return generator;
+        });
     };
     // console.log(requestProfile('1').then((a) => {console.log(a)}));
+    var count = 0;
+    var taskQueue = [];
+    /**
+     * @param uid uid
+     * @param max 最多并发请求数量
+     */
+    var requestUserProfile = function (uid, max) {
+        if (uid === void 0) { uid = "1"; }
+        if (max === void 0) { max = 4; }
+        /* 取任务 */
+        var pullTask = function () {
+            if (taskQueue.length === 0) {
+                return;
+            }
+            if (count >= max) {
+                return;
+            }
+            count++;
+            var _a = taskQueue.shift(), resolve = _a.resolve, uid = _a.uid;
+            resolve(runTask(uid));
+        };
+        /* 跑任务 */
+        var runTask = function (id) {
+            var promise = requestProfile(id);
+            promise.then(function () {
+                count--;
+                pullTask();
+            });
+            return promise;
+        };
+        return new Promise(function (resolve) {
+            /* 推送任务，全部进去 */
+            taskQueue.push({ resolve: resolve, uid: uid });
+            if (count < max) {
+                count++;
+                var _a = taskQueue.shift(), resolve_1 = _a.resolve, uid_1 = _a.uid;
+                resolve_1(runTask(uid_1));
+            }
+        });
+    };
+    /**
+     * 以下为测试用例，无需修改
+     */
+    var pLimitAsync = (function () { return __awaiter(void 0, void 0, void 0, function () {
+        var star_1, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    star_1 = Date.now();
+                    return [4 /*yield*/, Promise.all([
+                            requestUserProfile("1"),
+                            requestUserProfile("2"),
+                            requestUserProfile("3"),
+                            requestUserProfile("4"),
+                            requestUserProfile("5"),
+                            requestUserProfile("6"),
+                            requestUserProfile("7"),
+                            requestUserProfile("8"),
+                            requestUserProfile("9"),
+                            requestUserProfile("10"),
+                            requestUserProfile("11"),
+                            requestUserProfile("12"),
+                            requestUserProfile("13"),
+                            requestUserProfile("14"),
+                            requestUserProfile("15"),
+                            requestUserProfile("16"),
+                            requestUserProfile("17"),
+                            requestUserProfile("18"),
+                        ]).then(function (result) {
+                            console.log(Date.now() - star_1, 195);
+                            // if (Date.now() - star < 2000 || Date.now() - star >= 3000) {
+                            //   throw new Error("Wrong answer");
+                            // }
+                            console.log(result, 183);
+                            if (!isEqual(result, [
+                                {
+                                    uid: "1",
+                                    nick: "nick-1",
+                                    age: "18"
+                                },
+                                {
+                                    uid: "2",
+                                    nick: "nick-2",
+                                    age: "18"
+                                },
+                                {
+                                    uid: "3",
+                                    nick: "nick-3",
+                                    age: "18"
+                                },
+                                {
+                                    uid: "1",
+                                    nick: "nick-1",
+                                    age: "18"
+                                },
+                            ])) {
+                                throw new Error("Wrong answer");
+                            }
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/, _requestTime === 3];
+                case 2:
+                    err_1 = _a.sent();
+                    console.warn("测试运行失败");
+                    console.error(err_1);
+                    return [2 /*return*/, false];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); });
 
+    pLimitAsync();
     /**
      * @description 获取rgb随机颜色值
      * @type
@@ -18539,7 +18577,6 @@
     exports.randomRgbColor = randomRgbColor;
     exports.randomString = randomString;
     exports.removeStorage = removeStorage;
-    exports.requestUserProfile = requestUserProfile;
     exports.scrollToBottom = scrollToBottom;
     exports.scrollToTop = scrollToTop;
     exports.setStorage = setStorage;
