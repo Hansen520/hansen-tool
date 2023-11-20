@@ -1,7 +1,7 @@
-import { isArray } from "lodash-es";
+import { isArray, uniq } from "lodash-es";
 import pLimitAsync from "./asyncPool";
+import Storage from "./storage";
 
-pLimitAsync()
 /**
  * @description 获取rgb随机颜色值
  * @type
@@ -21,7 +21,7 @@ export const randomRgbColor = () => {
  * @default
  * @example 1314520.86 => 1,314,520.86
  */
-export const formatPrice = function (number: number) {
+export const formatPrice = function (number: number = 0) {
   /* 设置边界值 */
   if (number === 0) return "0";
   // 没有则返回undefined
@@ -48,46 +48,6 @@ export const formatPrice = function (number: number) {
     r += strNumber.substring(index);
   }
   return r;
-};
-/**
- * @description 获取本地存储
- * @param {string} key
- * @return {*}
- */
-export const getStorage = (key) => {
-  const value = window.localStorage.getItem(key) || "";
-  try {
-    return JSON.parse(value);
-  } catch (error) {
-    return value;
-  }
-};
-
-/**
- * @description 设置本地存储
- * @param {string} key
- * @param {any} value
- * @return {*}
- */
-export const setStorage = (key, value) => {
-  window.localStorage.setItem(key, JSON.stringify(value));
-};
-
-/**
- * @description 移除某个本地存储
- * @param {string} key
- * @return {*}
- */
-export const removeStorage = (key: string) => {
-  window.localStorage.removeItem(key);
-};
-
-/**
- * @description 清空本地存储
- * @return {*}
- */
-export const clearStorage = () => {
-  window.localStorage.clear();
 };
 
 /**
@@ -337,4 +297,23 @@ export const findParentNodeArray = (array: any[], parentSubjectCode, period: str
   return parentSubjectStock.map((item) => item[period]);
 };
 
-export { pLimitAsync };
+
+/*
+  @param {*} array 要被递归的数组
+  @des: 判断数组内是否有元素重复，如果有返回true，没有返回false
+  
+*/
+
+export const hasDuplicates = (arr: any[]) => {
+  if (!isArray(arr)) {
+    throw '请传入数组';
+  }
+  if (arr.length === 1) {
+    return false;
+  }
+  // lodash 数组去重
+  return uniq(arr).length !== arr.length; 
+}
+
+
+export { pLimitAsync, Storage };
