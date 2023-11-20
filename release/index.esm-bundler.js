@@ -18165,7 +18165,7 @@ var requestUserProfile = function (uid, max) {
 /**
  * 以下为测试用例，无需修改
  */
-var pLimitAsync = (function () { return __awaiter(void 0, void 0, void 0, function () {
+var asyncPool = (function () { return __awaiter(void 0, void 0, void 0, function () {
     var star_1, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -18235,7 +18235,67 @@ var pLimitAsync = (function () { return __awaiter(void 0, void 0, void 0, functi
     });
 }); });
 
-pLimitAsync();
+var Storage = /** @class */ (function () {
+    function Storage() {
+        var _this = this;
+        /**
+         * @description 设置本地存储
+         * @param {string} key
+         * @return {*}
+         */
+        this.setStorage = function (key, value) {
+            window.localStorage.setItem(key, JSON.stringify(value));
+        };
+        /**
+         * @description 获取本地存储
+         * @param {string} key
+         * @return {*}
+         */
+        this.getStorage = function (key) {
+            var value = window.localStorage.getItem(key);
+            try {
+                if (value && value != "") {
+                    return JSON.parse(value);
+                }
+            }
+            catch (error) {
+                return value;
+            }
+        };
+        /**
+         * @description 更新本地存储
+         * @param {string} key
+         * @return {*}
+         */
+        this.update = function (key, newValue) {
+            try {
+                var oldValue = _this.getStorage(key);
+                var _newValue = typeof newValue === "string" ? newValue : Object.assign({}, oldValue, newValue);
+                return _this.setStorage(key, JSON.stringify(_newValue));
+            }
+            catch (error) {
+                throw error;
+            }
+        };
+        /**
+         * @description 移除某个本地存储
+         * @param {string} key
+         * @return {*}
+         */
+        this.removeStorage = function (key) {
+            window.localStorage.removeItem(key);
+        };
+        /**
+         * @description 清空本地存储
+         * @return {*}
+         */
+        this.clearStorage = function () {
+            window.localStorage.clear();
+        };
+    }
+    return Storage;
+}());
+
 /**
  * @description 获取rgb随机颜色值
  * @type
@@ -18255,6 +18315,7 @@ var randomRgbColor = function () {
  * @example 1314520.86 => 1,314,520.86
  */
 var formatPrice = function (number) {
+    if (number === void 0) { number = 0; }
     /* 设置边界值 */
     if (number === 0)
         return "0";
@@ -18283,44 +18344,6 @@ var formatPrice = function (number) {
         r += strNumber.substring(index);
     }
     return r;
-};
-/**
- * @description 获取本地存储
- * @param {string} key
- * @return {*}
- */
-var getStorage = function (key) {
-    var value = window.localStorage.getItem(key) || "";
-    try {
-        return JSON.parse(value);
-    }
-    catch (error) {
-        return value;
-    }
-};
-/**
- * @description 设置本地存储
- * @param {string} key
- * @param {any} value
- * @return {*}
- */
-var setStorage = function (key, value) {
-    window.localStorage.setItem(key, JSON.stringify(value));
-};
-/**
- * @description 移除某个本地存储
- * @param {string} key
- * @return {*}
- */
-var removeStorage = function (key) {
-    window.localStorage.removeItem(key);
-};
-/**
- * @description 清空本地存储
- * @return {*}
- */
-var clearStorage = function () {
-    window.localStorage.clear();
 };
 /**
  * @description: 通过文件地址下载文件
@@ -18557,5 +18580,20 @@ var findParentNodeArray = function (array, parentSubjectCode, period) {
     findParentNode(array, parentSubjectCode);
     return parentSubjectStock.map(function (item) { return item[period]; });
 };
+/*
+  @param {*} array 要被递归的数组
+  @des: 判断数组内是否有元素重复，如果有返回true，没有返回false
+  
+*/
+var hasDuplicates = function (arr) {
+    if (!isArray(arr)) {
+        throw '请传入数组';
+    }
+    if (arr.length === 1) {
+        return false;
+    }
+    // lodash 数组去重
+    return uniq(arr).length !== arr.length;
+};
 
-export { checkBrowser, clearStorage, fileDownload, fileDownloadByRes, fileDownloadByType, findParentNodeArray, formatPrice, getBetweenYears, getExt, getStorage, pLimitAsync, randomNum, randomRange, randomRgbColor, randomString, removeStorage, scrollToBottom, scrollToTop, setStorage, sleep };
+export { Storage, checkBrowser, fileDownload, fileDownloadByRes, fileDownloadByType, findParentNodeArray, formatPrice, getBetweenYears, getExt, hasDuplicates, asyncPool as pLimitAsync, randomNum, randomRange, randomRgbColor, randomString, scrollToBottom, scrollToTop, sleep };

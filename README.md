@@ -1,10 +1,42 @@
 # hansen-tool
-实用的工具集-tool
+实用的工具集-tool，一款来在工具库的爱！
 
 
 
 ## 简介
-特色，我们开发中一些实用的工具函数
+特色，我们开发中一些实用的工具函数，分为三种打包模式esModule，commonJs和global模式
+
+## 安装下载
+
+- 下载地址 https://github.com/Hansen520/hansen-tool/releases
+- npm地址 npm i hansen-tool
+- CDN https://unpkg.com/hansen-tool
+
+## 使用方法
+
+**esModule**
+
+```javascript
+import {randomRgbColor, Storage} from 'hansen-tool';
+randomRgbColor();
+Storage.setStorage(key: string, value: string)
+```
+
+**commonJs**
+
+```javascript
+const {randomRgbColor,Storage}  = require('hansen-tool');
+randomRgbColor();
+Storage.setStorage(key: string, value: string)
+```
+
+`global` ，可以直接调用cdn方式进行调用
+
+```javascrip
+<script src="http://unpkg.com/hansen-tool"></script>
+hansenTool.randomRgbColor();
+hansenTool.Storage.setStorage(key: string, value: string)
+```
 
 ## 相关函数的介绍
 
@@ -13,14 +45,6 @@
 `randomRgbColor()` 获取随机颜色
 
 `formatPrice(number: number)`将金额以逗号分隔，1314520.52 => 1,314,520.52
-
-`getStorage(key: string)` 获取本地存储
-
-`setStorage(key: string, value: string)`设置本地存储
-
-`removeStorage(key: string)`移除本地存储
-
-`clearStorage()`移除本地存储
 
 `fileDownload(href: string, fileName: string)`文件下载(普通下载，图片等可能会直接打开页面)
 
@@ -54,12 +78,22 @@
 
 `findParentNodeArray(array: any[], parentSubjectCode, period: string = "value")` 根据递归数组获取映射的路径, array为递归数据，parentSubjectCode为寻找的值，period为寻找的字段
 
-`requestUserProfile()`
+`hasDuplicates` 查找数组内是否有重复的数组，是返回true，否返回false
 
-## 安装下载
-- 下载地址 https://github.com/Hansen520/hansen-tool/releases
-- npm地址 npm i hansen-tool
-- CDN http://unpkg.com/hansen-tool
+```jvascript
+Storage.getStorage(key: string) 获取本地存储
+
+Storage.setStorage(key: string, value: string) 设置本地存储
+
+Storage.updateStorage(key: string, value: string) 更新本地存储
+
+Storage.removeStorage(key: string) 移除本地存储
+
+Storage.clearStorage() 移除本地存储
+
+```
+
+
 
 ## 快速使用
 简单的接入文档
@@ -73,5 +107,5 @@
 
 ## 关于作者
 - 个人主页
-- 收款二维码
+- 编码不易，还望支持哦！
 <img src="1698907738233.png" alt="Alt text" style="zoom:50%;" />

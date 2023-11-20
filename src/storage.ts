@@ -4,7 +4,7 @@ export default class Storage {
    * @param {string} key
    * @return {*}
    */
-  setStorage = (key: string, value: any) => {
+  static setStorage = (key: string, value: any) => {
     window.localStorage.setItem(key, JSON.stringify(value));
   };
 
@@ -13,7 +13,7 @@ export default class Storage {
    * @param {string} key
    * @return {*}
    */
-  getStorage = (key: string) => {
+  static getStorage = (key: string) => {
     const value = window.localStorage.getItem(key);
     try {
       if (value && value != "") {
@@ -28,11 +28,11 @@ export default class Storage {
    * @param {string} key
    * @return {*}
    */
-  update = (key: string, newValue: any) => {
+  static updateStorage = (key: string, newValue: any) => {
     try {
-      const oldValue = this.getStorage(key);
+      const oldValue = Storage.getStorage(key);
       const _newValue = typeof newValue === "string" ? newValue : Object.assign({}, oldValue, newValue);
-      return this.setStorage(key, JSON.stringify(_newValue));
+      Storage.setStorage(key, _newValue);
     } catch (error) {
       throw error;
     }
@@ -42,14 +42,14 @@ export default class Storage {
    * @param {string} key
    * @return {*}
    */
-  removeStorage = (key: string) => {
+  static removeStorage = (key: string) => {
     window.localStorage.removeItem(key);
   };
   /**
    * @description 清空本地存储
    * @return {*}
    */
-  clearStorage = () => {
+  static clearStorage = () => {
     window.localStorage.clear();
   };
 }

@@ -16,7 +16,6 @@ const packageFormats = process.env.FORMATS.split(',');
 
 // 稍后打包所有文件的时候 可能不会有packageFormats
 const packageConfigs = packageFormats || pkg.buildOptions.formats;
-
 const outputConfig = {
   'esm-bundler': {
     file: path.resolve(`release/${name}.esm-bundler.js`),
@@ -37,7 +36,7 @@ function createConfig(format, output) {
   output.exports = 'named';
   let external = []; // 外部模块 哪些模块不需要打包
   if (format === 'global') {
-    // output.name = pkg.buildOptions.name;
+    output.name = "window.hansenTool";
   } else {
     // 忽略一些文件
     // external = [...Object.keys(pkg.dependencies)];
