@@ -18318,9 +18318,12 @@ this.window.hansenTool = (function (exports) {
      * @example colorRgbToHex('rgb(255,255,255)') => #ffffff
      */
     var colorRgbToHex = function (rgb) {
+        if (!rgb.includes("rgb")) {
+            throw new Error('必需包含rgb');
+        }
         // split 的参数可以是正则表达式
         var rgbArr = rgb.split(/[^\d]+/);
-        var color = rgbArr[1] << 16 | rgbArr[2] << 8 | rgbArr[3];
+        var color = (rgbArr[1] << 16) | (rgbArr[2] << 8) | rgbArr[3];
         return "#" + ("00000" + color.toString(16)).slice(-6);
     };
     /**
@@ -18330,10 +18333,13 @@ this.window.hansenTool = (function (exports) {
      * @example colorRgbaToHex('rgb(255,255,255)') => #ffffff
      */
     var colorRgbaToHex = function (rgba) {
+        if (!rgba.includes("rgba")) {
+            throw new Error('必需包含rgba');
+        }
         // 将 rgba 颜色值分割为 r、g、b 和 a 的值
-        var _a = rgba.split(',').map(Number), r = _a[0], g = _a[1], b = _a[2]; _a[3];
+        var _a = rgba.split(",").map(Number), r = _a[0], g = _a[1], b = _a[2]; _a[3];
         // 将 r、g、b 值转换为十六进制字符串
-        var hex = '#' + ((1 << 24) + r << 16 + g << 8 + b).toString(16).slice(1);
+        var hex = "#" + ((((1 << 24) + r) << (16 + g)) << (8 + b)).toString(16).slice(1);
         return hex;
     };
     /**
@@ -18343,13 +18349,12 @@ this.window.hansenTool = (function (exports) {
      * @example colorHexToRgb('#ffffff') => rgb(255,255,255)
      */
     var colorHexToRgb = function (hex) {
-        // 去除十六进制颜色值的 '#' 符号
-        var hexValue = hex.slice(1);
-        // 将十六进制颜色值转换为整数
-        var r = parseInt(hexValue.substring(0, 2), 16) << 16;
-        var g = parseInt(hexValue.substring(2, 4), 16) << 8;
-        var b = parseInt(hexValue.substring(4, 6), 16);
-        return "rgb(".concat(r, ", ").concat(g, ", ").concat(b, ")");
+        if (hex.length !== 7 || hex.charAt(0) !== "#") {
+            throw new Error('必需包含#, 且长度为7位的字符');
+        }
+        // 转为6位的16进制 0xcc00ff
+        var newHex = hex.replace("#", "0x"), r = newHex >> 16, g = (newHex >> 8) & 0xff, b = newHex & 0xff;
+        return "rgb(".concat(r, ",").concat(g, ",").concat(b, ")");
     };
     /**
      * @description rgba的颜色值转为Hex颜色值
@@ -18359,6 +18364,9 @@ this.window.hansenTool = (function (exports) {
      */
     var colorHexToRgba = function (hex, alpha) {
         if (alpha === void 0) { alpha = 1; }
+        if (hex.length !== 7 || hex.charAt(0) !== "#") {
+            throw new Error('必需包含#, 且长度为7位的字符');
+        }
         // 去除十六进制颜色值的 '#' 符号
         var hexValue = hex.slice(1);
         // 将十六进制颜色值转换为整数
@@ -18645,7 +18653,7 @@ this.window.hansenTool = (function (exports) {
     */
     var hasDuplicates = function (arr) {
         if (!isArray(arr)) {
-            throw '请传入数组';
+            throw "请传入数组";
         }
         if (arr.length === 1) {
             return false;
@@ -18659,7 +18667,7 @@ this.window.hansenTool = (function (exports) {
      * @returns
      */
     var phoneEncryption = function (phone) {
-        return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+        return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
     };
     /**
      * 格式化价格数额为字符串
@@ -18677,10 +18685,10 @@ this.window.hansenTool = (function (exports) {
         priceFormatValue = "".concat(Math.ceil(priceFormatValue) / 100); // 向上取整，单位转换为元，转换为字符串
         if (fill > 0) {
             // 补充小数位数
-            if (priceFormatValue.indexOf('.') === -1) {
+            if (priceFormatValue.indexOf(".") === -1) {
                 priceFormatValue = "".concat(priceFormatValue, ".");
             }
-            var n = fill - ((_a = priceFormatValue.split('.')[1]) === null || _a === void 0 ? void 0 : _a.length);
+            var n = fill - ((_a = priceFormatValue.split(".")[1]) === null || _a === void 0 ? void 0 : _a.length);
             for (var i = 0; i < n; i++) {
                 priceFormatValue = "".concat(priceFormatValue, "0");
             }

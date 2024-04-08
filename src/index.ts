@@ -22,11 +22,14 @@ export const randomRgbColor = () => {
  * @example colorRgbToHex('rgb(255,255,255)') => #ffffff
  */
 export const colorRgbToHex = (rgb: string) => {
+  if (!rgb.includes("rgb")) {
+    throw new Error('必需包含rgb');
+  }
   // split 的参数可以是正则表达式
   const rgbArr = rgb.split(/[^\d]+/) as any;
-  const color = rgbArr[1] << 16 | rgbArr[2] << 8 | rgbArr[3];
+  const color = (rgbArr[1] << 16) | (rgbArr[2] << 8) | rgbArr[3];
   return "#" + ("00000" + color.toString(16)).slice(-6);
-}
+};
 
 /**
  * @description rgba的颜色值转为Hex颜色值
@@ -35,12 +38,15 @@ export const colorRgbToHex = (rgb: string) => {
  * @example colorRgbaToHex('rgb(255,255,255)') => #ffffff
  */
 export const colorRgbaToHex = (rgba: string) => {
+  if (!rgba.includes("rgba")) {
+    throw new Error('必需包含rgba');
+  }
   // 将 rgba 颜色值分割为 r、g、b 和 a 的值
-  const [r, g, b, a] = rgba.split(',').map(Number);
+  const [r, g, b, a] = rgba.split(",").map(Number);
   // 将 r、g、b 值转换为十六进制字符串
-  const hex = '#' + ((1 << 24) + r << 16 + g << 8 + b).toString(16).slice(1);
+  const hex = "#" + ((((1 << 24) + r) << (16 + g)) << (8 + b)).toString(16).slice(1);
   return hex;
-}
+};
 
 /**
  * @description rgba的颜色值转为Hex颜色值
@@ -49,14 +55,16 @@ export const colorRgbaToHex = (rgba: string) => {
  * @example colorHexToRgb('#ffffff') => rgb(255,255,255)
  */
 export const colorHexToRgb = (hex: string) => {
-  // 去除十六进制颜色值的 '#' 符号
-  const hexValue = hex.slice(1);
-  // 将十六进制颜色值转换为整数
-  const r = parseInt(hexValue.substring(0, 2), 16) << 16;
-  const g = parseInt(hexValue.substring(2, 4), 16) << 8;
-  const b = parseInt(hexValue.substring(4, 6), 16);
-  return `rgb(${r}, ${g}, ${b})`;
-}
+  if (hex.length !== 7 || hex.charAt(0) !== "#") {
+    throw new Error('必需包含#, 且长度为7位的字符');
+  };
+  // 转为6位的16进制 0xcc00ff
+  let newHex = hex.replace("#", "0x") as any,
+    r = newHex >> 16,
+    g = (newHex >> 8) & 0xff,
+    b = newHex & 0xff;
+  return `rgb(${r},${g},${b})`;
+};
 
 /**
  * @description rgba的颜色值转为Hex颜色值
@@ -65,6 +73,9 @@ export const colorHexToRgb = (hex: string) => {
  * @example colorHexToRgb('#ffffff', 1) => rgb(255,255,255, 1)
  */
 export const colorHexToRgba = (hex, alpha = 1) => {
+  if (hex.length !== 7 || hex.charAt(0) !== "#") {
+    throw new Error('必需包含#, 且长度为7位的字符');
+  };
   // 去除十六进制颜色值的 '#' 符号
   const hexValue = hex.slice(1);
   // 将十六进制颜色值转换为整数
@@ -72,7 +83,7 @@ export const colorHexToRgba = (hex, alpha = 1) => {
   const g = parseInt(hexValue.substring(2, 4), 16) << 8;
   const b = parseInt(hexValue.substring(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
+};
 
 /**
  * @description 金额逗号分隔
@@ -356,21 +367,20 @@ export const findParentNodeArray = (array: any[], parentSubjectCode, period: str
   return parentSubjectStock.map((item) => item[period]);
 };
 
-
 /*
   @param {*} array 要被递归的数组
   @des: 判断数组内是否有元素重复，如果有返回true，没有返回false
 */
 export const hasDuplicates = (arr: any[]) => {
   if (!isArray(arr)) {
-    throw '请传入数组';
+    throw "请传入数组";
   }
   if (arr.length === 1) {
     return false;
   }
   // lodash 数组去重
-  return uniq(arr).length !== arr.length; 
-}
+  return uniq(arr).length !== arr.length;
+};
 
 /**
  * 手机号码*加密函数
@@ -378,7 +388,7 @@ export const hasDuplicates = (arr: any[]) => {
  * @returns
  */
 export const phoneEncryption = (phone) => {
-  return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+  return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
 };
 
 /**
@@ -396,18 +406,15 @@ export const priceFormat = (price, fill = 0) => {
   priceFormatValue = `${Math.ceil(priceFormatValue) / 100}`; // 向上取整，单位转换为元，转换为字符串
   if (fill > 0) {
     // 补充小数位数
-    if (priceFormatValue.indexOf('.') === -1) {
+    if (priceFormatValue.indexOf(".") === -1) {
       priceFormatValue = `${priceFormatValue}.`;
     }
-    const n = fill - priceFormatValue.split('.')[1]?.length;
+    const n = fill - priceFormatValue.split(".")[1]?.length;
     for (let i = 0; i < n; i++) {
       priceFormatValue = `${priceFormatValue}0`;
     }
   }
   return priceFormatValue;
-}
-
-
+};
 
 export { pLimitAsync, Storage };
-
