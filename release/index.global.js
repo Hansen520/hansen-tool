@@ -10841,7 +10841,7 @@ this.window.hansenTool = (function (exports) {
      * _.isNaN(undefined);
      * // => false
      */
-    function isNaN(value) {
+    function isNaN$1(value) {
       // An `NaN` primitive is the only value that is not equal to itself.
       // Perform the `toStringTag` check first to avoid errors with some
       // ActiveX objects in IE.
@@ -17280,7 +17280,7 @@ this.window.hansenTool = (function (exports) {
       isArray, isArrayBuffer, isArrayLike, isArrayLikeObject, isBoolean,
       isBuffer, isDate, isElement, isEmpty, isEqual,
       isEqualWith, isError, isFinite, isFunction, isInteger,
-      isLength, isMap, isMatch, isMatchWith, isNaN,
+      isLength, isMap, isMatch, isMatchWith, isNaN: isNaN$1,
       isNative, isNil, isNull, isNumber, isObject,
       isObjectLike, isPlainObject, isRegExp, isSafeInteger, isSet,
       isString, isSymbol, isTypedArray, isUndefined, isWeakMap,
@@ -18312,6 +18312,62 @@ this.window.hansenTool = (function (exports) {
         return "rgb(".concat(r, ",").concat(g, ",").concat(b, ")");
     };
     /**
+     * @description rgb的颜色值转为Hex颜色值
+     * @type
+     * @default
+     * @example colorRgbToHex('rgb(255,255,255)') => #ffffff
+     */
+    var colorRgbToHex = function (rgb) {
+        // split 的参数可以是正则表达式
+        var rgbArr = rgb.split(/[^\d]+/);
+        var color = rgbArr[1] << 16 | rgbArr[2] << 8 | rgbArr[3];
+        return "#" + ("00000" + color.toString(16)).slice(-6);
+    };
+    /**
+     * @description rgba的颜色值转为Hex颜色值
+     * @type
+     * @default
+     * @example colorRgbaToHex('rgb(255,255,255)') => #ffffff
+     */
+    var colorRgbaToHex = function (rgba) {
+        // 将 rgba 颜色值分割为 r、g、b 和 a 的值
+        var _a = rgba.split(',').map(Number), r = _a[0], g = _a[1], b = _a[2]; _a[3];
+        // 将 r、g、b 值转换为十六进制字符串
+        var hex = '#' + ((1 << 24) + r << 16 + g << 8 + b).toString(16).slice(1);
+        return hex;
+    };
+    /**
+     * @description rgba的颜色值转为Hex颜色值
+     * @type
+     * @default
+     * @example colorHexToRgb('#ffffff') => rgb(255,255,255)
+     */
+    var colorHexToRgb = function (hex) {
+        // 去除十六进制颜色值的 '#' 符号
+        var hexValue = hex.slice(1);
+        // 将十六进制颜色值转换为整数
+        var r = parseInt(hexValue.substring(0, 2), 16) << 16;
+        var g = parseInt(hexValue.substring(2, 4), 16) << 8;
+        var b = parseInt(hexValue.substring(4, 6), 16);
+        return "rgb(".concat(r, ", ").concat(g, ", ").concat(b, ")");
+    };
+    /**
+     * @description rgba的颜色值转为Hex颜色值
+     * @type
+     * @default
+     * @example colorHexToRgb('#ffffff', 1) => rgb(255,255,255, 1)
+     */
+    var colorHexToRgba = function (hex, alpha) {
+        if (alpha === void 0) { alpha = 1; }
+        // 去除十六进制颜色值的 '#' 符号
+        var hexValue = hex.slice(1);
+        // 将十六进制颜色值转换为整数
+        var r = parseInt(hexValue.substring(0, 2), 16) << 16;
+        var g = parseInt(hexValue.substring(2, 4), 16) << 8;
+        var b = parseInt(hexValue.substring(4, 6), 16);
+        return "rgba(".concat(r, ", ").concat(g, ", ").concat(b, ", ").concat(alpha, ")");
+    };
+    /**
      * @description 金额逗号分隔
      * @type
      * @default
@@ -18586,7 +18642,6 @@ this.window.hansenTool = (function (exports) {
     /*
       @param {*} array 要被递归的数组
       @des: 判断数组内是否有元素重复，如果有返回true，没有返回false
-      
     */
     var hasDuplicates = function (arr) {
         if (!isArray(arr)) {
@@ -18598,9 +18653,47 @@ this.window.hansenTool = (function (exports) {
         // lodash 数组去重
         return uniq(arr).length !== arr.length;
     };
+    /**
+     * 手机号码*加密函数
+     * @param {string} phone 电话号
+     * @returns
+     */
+    var phoneEncryption = function (phone) {
+        return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+    };
+    /**
+     * 格式化价格数额为字符串
+     * 可对小数部分进行填充，默认不填充
+     * @param price 价格数额，以分为单位!
+     * @param fill 是否填充小数部分 0-不填充 1-填充第一位小数 2-填充两位小数
+     */
+    var priceFormat = function (price, fill) {
+        var _a;
+        if (fill === void 0) { fill = 0; }
+        if (isNaN(price) || price === null || price === Infinity) {
+            return price;
+        }
+        var priceFormatValue = Math.round(parseFloat("".concat(price)) * Math.pow(10, 8)) / Math.pow(10, 8); // 恢复精度丢失
+        priceFormatValue = "".concat(Math.ceil(priceFormatValue) / 100); // 向上取整，单位转换为元，转换为字符串
+        if (fill > 0) {
+            // 补充小数位数
+            if (priceFormatValue.indexOf('.') === -1) {
+                priceFormatValue = "".concat(priceFormatValue, ".");
+            }
+            var n = fill - ((_a = priceFormatValue.split('.')[1]) === null || _a === void 0 ? void 0 : _a.length);
+            for (var i = 0; i < n; i++) {
+                priceFormatValue = "".concat(priceFormatValue, "0");
+            }
+        }
+        return priceFormatValue;
+    };
 
     exports.Storage = Storage;
     exports.checkBrowser = checkBrowser;
+    exports.colorHexToRgb = colorHexToRgb;
+    exports.colorHexToRgba = colorHexToRgba;
+    exports.colorRgbToHex = colorRgbToHex;
+    exports.colorRgbaToHex = colorRgbaToHex;
     exports.fileDownload = fileDownload;
     exports.fileDownloadByRes = fileDownloadByRes;
     exports.fileDownloadByType = fileDownloadByType;
@@ -18610,6 +18703,8 @@ this.window.hansenTool = (function (exports) {
     exports.getExt = getExt;
     exports.hasDuplicates = hasDuplicates;
     exports.pLimitAsync = asyncPool;
+    exports.phoneEncryption = phoneEncryption;
+    exports.priceFormat = priceFormat;
     exports.randomNum = randomNum;
     exports.randomRange = randomRange;
     exports.randomRgbColor = randomRgbColor;

@@ -16,6 +16,65 @@ export const randomRgbColor = () => {
 };
 
 /**
+ * @description rgb的颜色值转为Hex颜色值
+ * @type
+ * @default
+ * @example colorRgbToHex('rgb(255,255,255)') => #ffffff
+ */
+export const colorRgbToHex = (rgb: string) => {
+  // split 的参数可以是正则表达式
+  const rgbArr = rgb.split(/[^\d]+/) as any;
+  const color = rgbArr[1] << 16 | rgbArr[2] << 8 | rgbArr[3];
+  return "#" + ("00000" + color.toString(16)).slice(-6);
+}
+
+/**
+ * @description rgba的颜色值转为Hex颜色值
+ * @type
+ * @default
+ * @example colorRgbaToHex('rgb(255,255,255)') => #ffffff
+ */
+export const colorRgbaToHex = (rgba: string) => {
+  // 将 rgba 颜色值分割为 r、g、b 和 a 的值
+  const [r, g, b, a] = rgba.split(',').map(Number);
+  // 将 r、g、b 值转换为十六进制字符串
+  const hex = '#' + ((1 << 24) + r << 16 + g << 8 + b).toString(16).slice(1);
+  return hex;
+}
+
+/**
+ * @description rgba的颜色值转为Hex颜色值
+ * @type
+ * @default
+ * @example colorHexToRgb('#ffffff') => rgb(255,255,255)
+ */
+export const colorHexToRgb = (hex: string) => {
+  // 去除十六进制颜色值的 '#' 符号
+  const hexValue = hex.slice(1);
+  // 将十六进制颜色值转换为整数
+  const r = parseInt(hexValue.substring(0, 2), 16) << 16;
+  const g = parseInt(hexValue.substring(2, 4), 16) << 8;
+  const b = parseInt(hexValue.substring(4, 6), 16);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+/**
+ * @description rgba的颜色值转为Hex颜色值
+ * @type
+ * @default
+ * @example colorHexToRgb('#ffffff', 1) => rgb(255,255,255, 1)
+ */
+export const colorHexToRgba = (hex, alpha = 1) => {
+  // 去除十六进制颜色值的 '#' 符号
+  const hexValue = hex.slice(1);
+  // 将十六进制颜色值转换为整数
+  const r = parseInt(hexValue.substring(0, 2), 16) << 16;
+  const g = parseInt(hexValue.substring(2, 4), 16) << 8;
+  const b = parseInt(hexValue.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/**
  * @description 金额逗号分隔
  * @type
  * @default
@@ -301,9 +360,7 @@ export const findParentNodeArray = (array: any[], parentSubjectCode, period: str
 /*
   @param {*} array 要被递归的数组
   @des: 判断数组内是否有元素重复，如果有返回true，没有返回false
-  
 */
-
 export const hasDuplicates = (arr: any[]) => {
   if (!isArray(arr)) {
     throw '请传入数组';
@@ -315,5 +372,42 @@ export const hasDuplicates = (arr: any[]) => {
   return uniq(arr).length !== arr.length; 
 }
 
+/**
+ * 手机号码*加密函数
+ * @param {string} phone 电话号
+ * @returns
+ */
+export const phoneEncryption = (phone) => {
+  return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+};
+
+/**
+ * 格式化价格数额为字符串
+ * 可对小数部分进行填充，默认不填充
+ * @param price 价格数额，以分为单位!
+ * @param fill 是否填充小数部分 0-不填充 1-填充第一位小数 2-填充两位小数
+ */
+export const priceFormat = (price, fill = 0) => {
+  if (isNaN(price) || price === null || price === Infinity) {
+    return price;
+  }
+
+  let priceFormatValue: number | string = Math.round(parseFloat(`${price}`) * 10 ** 8) / 10 ** 8; // 恢复精度丢失
+  priceFormatValue = `${Math.ceil(priceFormatValue) / 100}`; // 向上取整，单位转换为元，转换为字符串
+  if (fill > 0) {
+    // 补充小数位数
+    if (priceFormatValue.indexOf('.') === -1) {
+      priceFormatValue = `${priceFormatValue}.`;
+    }
+    const n = fill - priceFormatValue.split('.')[1]?.length;
+    for (let i = 0; i < n; i++) {
+      priceFormatValue = `${priceFormatValue}0`;
+    }
+  }
+  return priceFormatValue;
+}
+
+
 
 export { pLimitAsync, Storage };
+
