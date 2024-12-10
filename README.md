@@ -106,4 +106,4 @@ Storage.clearStorage() 移除本地存储
 ## 关于作者
 - 个人主页
 - 编码不易，还望支持哦！
-<img src="1698907738233.png" alt="Alt text" style="zoom:50%;" />
+<!-- <img src="surport_pay.png" alt="Alt text" style="zoom:50%;" /> -->

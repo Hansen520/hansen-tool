@@ -1,9 +1,9 @@
 {
   "name": "hansen-tool",
-  "version": "0.3.0",
-  "description": "web的一些工具集函数",
+  "version": "0.3.1",
+  "description": "web的一些工具集函数,Hansen-tool",
   "type": "module",
-  "main": "release/index.js",
+  "main": "release/index.cjs.js",
   "module": "release/index.esm.js",
   "unpkg": "release/index.global.js",
   "types": "release/index.d.ts",
