@@ -1,9 +1,8 @@
 import { isArray, uniq } from "lodash-es";
-import pLimitAsync from "./asyncPool";
-import Storage from "./storage";
+// import Storage from "./storage.ts";
 
 /**
- * @description 获取rgb随机颜色值
+ * @description 获取rgb随机颜色值，一般用于测试用
  * @type
  * @default
  * @example randomRgbColor()
@@ -72,7 +71,7 @@ export const colorHexToRgb = (hex: string) => {
  * @default
  * @example colorHexToRgb('#ffffff', 1) => rgb(255,255,255, 1)
  */
-export const colorHexToRgba = (hex, alpha = 1) => {
+export const colorHexToRgba = (hex: string, alpha = 1) => {
   if (hex.length !== 7 || hex.charAt(0) !== "#") {
     throw new Error('必需包含#, 且长度为7位的字符');
   };
@@ -178,11 +177,10 @@ export const fileDownloadByType = (url: string, fileName: string) => {
  *
  */
 export const fileDownloadByRes = (
-  filename,
-  blobContent,
+  filename: string,
+  blobContent: any,
   type = "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 ) => {
-  console.log(filename, blobContent, 141);
   const blob = new Blob([blobContent], { type: `application/${type};charset=utf-8` });
   // 获取heads中的filename文件名
   const downloadElement = document.createElement("a");
@@ -303,7 +301,7 @@ export const checkBrowser = () => {
  * @description: 获取随机字符串  len为字符串长度
  * @param {*} len
  */
-export const randomString = (len) => {
+export const randomString = (len: number) => {
   const chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789";
   const strLen = chars.length;
   let randomStr = "";
@@ -318,13 +316,13 @@ export const randomString = (len) => {
  * @param {*} min
  * @param {*} max
  */
-export const randomRange = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+export const randomRange = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 /**
  * @description: 数组中获取随机数
  * @param {*} arr
  */
-export const randomNum = (arr) => arr[Math.floor(Math.random() * arr.length)];
+export const randomNum = (arr: any[]) => arr[Math.floor(Math.random() * arr.length)];
 
 /**
  * @description: 根据递归数组获取映射的路径
@@ -334,20 +332,24 @@ export const randomNum = (arr) => arr[Math.floor(Math.random() * arr.length)];
  * @example [
     {
       value: "a",
-      children: [{ value: "g4", label: '3', children: [
+      children: [
         {
-          value: 'yy'
-        }
+          value: "g4",
+          label: '3',
+          children: [
+          {
+            value: 'yy'
+          }
       ]}],
     }] ====> ['a', 'g4', 'yy']
  */
-export const findParentNodeArray = (array: any[], parentSubjectCode, period: string = "value") => {
+export const findParentNodeArray = (array: (string)[], parentSubjectCode: string, period: string = "value") => {
   if (!isArray(array)) {
     throw "传入的为非数组，请重新传入";
   }
-  const parentSubjectStock: any = []; // 存储父节点
+  const parentSubjectStock: (string)[] = []; // 存储父节点
   let going = true; // 是否已找到要查到的节点
-  const findParentNode = function (array, code) {
+  const findParentNode = function (array: string[], code: string) {
     array.forEach((item: any) => {
       if (!going) {
         return;
@@ -364,7 +366,7 @@ export const findParentNodeArray = (array: any[], parentSubjectCode, period: str
     if (going) parentSubjectStock.pop();
   };
   findParentNode(array, parentSubjectCode);
-  return parentSubjectStock.map((item) => item[period]);
+  return parentSubjectStock.map((item) => item[period as any]);
 };
 
 /*
@@ -387,7 +389,7 @@ export const hasDuplicates = (arr: any[]) => {
  * @param {string} phone 电话号
  * @returns
  */
-export const phoneEncryption = (phone) => {
+export const phoneEncryption = (phone: string) => {
   return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
 };
 
@@ -397,7 +399,7 @@ export const phoneEncryption = (phone) => {
  * @param price 价格数额，以分为单位!
  * @param fill 是否填充小数部分 0-不填充 1-填充第一位小数 2-填充两位小数
  */
-export const priceFormat = (price, fill = 0) => {
+export const priceFormat = (price: number, fill = 0) => {
   if (isNaN(price) || price === null || price === Infinity) {
     return price;
   }
@@ -417,4 +419,61 @@ export const priceFormat = (price, fill = 0) => {
   return priceFormatValue;
 };
 
-export { pLimitAsync, Storage };
+/**
+ * 格式化文件大小，将字节转换为 KB、MB、GB 或 TB。
+ * @param {number} sizeInBytes - 文件大小，以字节为单位
+ * @returns {string} 格式化后的文件大小，包括单位
+ * @example formatFileSize(123456789) => 117.74 MB
+ */
+export const formatFileSize = (sizeInBytes: number) => {
+  // 如果大小为0，直接返回
+  if (sizeInBytes === 0) return '0 Bytes';
+
+  // 定义单位数组
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  // 计算指数，即单位数组的索引
+  const exponent = Math.floor(Math.log(sizeInBytes) / Math.log(1024));
+
+  // 根据指数计算大小，并保留两位小数
+  const size = (sizeInBytes / Math.pow(1024, exponent)).toFixed(2);
+
+  // 获取对应的单位
+  const unit = units[exponent];
+
+  // 返回格式化后的字符串
+  return `${size}${unit}`;
+}
+
+/**
+ * 将文件大小从一个单位转换为另一个单位。
+ *
+ * @param {number} size 文件大小。
+ * @param {string} fromUnit 初始单位（'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'）。
+ * @param {string} toUnit 目标单位（'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'）。
+ * @param {number} [decimalPoint=2] 结果保留的小数位数，默认为2。
+ * @return {string} 转换后的文件大小，带单位。
+ * @example console.log(convertFileSize(1, 'GB', 'MB')); // 输出: 1024.00 MB
+ */
+export const convertFileSize = (size: number, fromUnit: string, toUnit: string, decimalPoint = 2) => {
+  // 定义单位与字节之间的转换关系
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  // 获取初始单位和目标单位的索引
+  const fromIndex = units.indexOf(fromUnit);
+  const toIndex = units.indexOf(toUnit);
+
+  // 如果单位不在列表中，抛出错误
+  if (fromIndex === -1 || toIndex === -1) {
+    throw new Error('Invalid units');
+  }
+
+  // 计算初始单位与目标单位之间的转换系数
+  const exponent = toIndex - fromIndex;
+  // 计算结果大小
+  const resultSize = size / Math.pow(1024, exponent);
+
+  // 返回格式化后的结果
+  return parseFloat(resultSize.toFixed(decimalPoint)) + ' ' + toUnit;
+}
+
+// export { Storage };

@@ -2,11 +2,13 @@
  * @Date: 2023-04-20 10:51:06
  * @Description: description
  */
-const minimist = require('minimist');
-const execa = require('execa');
-// minimist 是一个专门用于处理Node.js启动参数的库，可以将 process.argv 中的参数列表转换成更加易于使用的格式
-const args = minimist(process.argv.slice(2));
+import minimist from 'minimist';
+import { execa } from 'execa';
+import process from 'process';
 
+// minimist 是一个专门用于处理Node.js启动参数的库，可以将 process.argv 中的参数列表转换成更加易于使用的格式
+const args = minimist(process.argv.slice(2)); // 对参数做解析用的
+console.log(args, 11);
 // 获取执行命令时的参数
 const target = args._.length ? args._[0] : 'reactivity';
 const formats = args.f || 'global'; // esm-bndler global cjs打包的三种方式在这里声明
