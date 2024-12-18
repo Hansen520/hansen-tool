@@ -1158,13 +1158,13 @@ this.window.HanTool = (function (exports) {
           // 生成 Blob 对象，设置 type 等信息
           const e = new Blob([blobRes], {
               type: "application/octet-stream",
-          });
-          // 将 Blob 对象转为 url
-          const link = window.URL.createObjectURL(e);
+          }); // 将arrayBuffer转为blob对象
+          const link = window.URL.createObjectURL(e); // 将 Blob 对象转为 url
           const a = document.createElement("a");
           a.href = link;
           a.download = fileName;
           a.click();
+          window.URL.revokeObjectURL(link);
       })
           .catch((err) => {
           console.error(err);
