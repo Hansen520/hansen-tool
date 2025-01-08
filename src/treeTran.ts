@@ -1,6 +1,6 @@
 import { isArray, uniq } from "lodash-es";
 /**
- * @description: 根据递归数组获取映射的路径
+ * @description: 根据递归树形菜单和目标值，获取从根节点到目标节点的路径
  * @param {*} array 要被递归的数组
  * @param {*} parentSubjectCode，目标
  * @param {*} period 对哪个字段进行映射，默认为value

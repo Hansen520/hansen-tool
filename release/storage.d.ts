@@ -12,7 +12,7 @@ export default class Storage {
      */
     static getStorage: (key: string) => any;
     /**
-     * @description 更新本地存储
+     * @description 更新本地存储，如果是字符串直接更新，如果是对象，则合并
      * @param {string} key
      * @return {*}
      */

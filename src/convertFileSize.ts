@@ -1,5 +1,5 @@
 /**
- * 将文件大小从一个单位转换为另一个单位。
+ * 精准将文件大小从一个单位转换为另一个单位。
  *
  * @param {number} size 文件大小。
  * @param {string} fromUnit 初始单位（'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'）。
