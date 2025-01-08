@@ -2,6 +2,7 @@ import Storage from "./storage.js";
 import { getBetweenYearsArr } from "./betweenYear.js";
 import { detectDeviceType, checkBrowser } from "./checkBrowser.js";
 import { colorRgbaToHex, colorHexToRgba, colorHexToRgb } from "./colorToTran.js";
+import { send } from "./concurrencySend.js";
 import { convertFileSize, formatFileSize } from "./convertFileSize.js";
 import { fileDownload, fileDownloadByRes, fileDownloadByType } from "./fileDownload.js";
 import { formatPrice, priceFormat } from "./formatPrice.js";
@@ -12,5 +13,5 @@ import { randomNum, randomRange, randomRgbColor, randomString } from "./randomVa
 import { scrollToBottom, scrollToTop } from "./scroll.js";
 import { sleep } from "./sleep.js";
 import { findParentNodeArray } from "./treeTran.js";
-export { Storage, getBetweenYearsArr, detectDeviceType, checkBrowser, convertFileSize, formatFileSize, colorRgbaToHex, colorHexToRgba, colorHexToRgb, fileDownload, fileDownloadByRes, fileDownloadByType, formatPrice, priceFormat, getExt, hasDuplicates, phoneEncryption, randomNum, randomRange, randomRgbColor, randomString, scrollToBottom, scrollToTop, sleep, findParentNodeArray };
+export { Storage, getBetweenYearsArr, detectDeviceType, checkBrowser, convertFileSize, formatFileSize, colorRgbaToHex, colorHexToRgba, colorHexToRgb, send, fileDownload, fileDownloadByRes, fileDownloadByType, formatPrice, priceFormat, getExt, hasDuplicates, phoneEncryption, randomNum, randomRange, randomRgbColor, randomString, scrollToBottom, scrollToTop, sleep, findParentNodeArray };
 //# sourceMappingURL=index.d.ts.map
