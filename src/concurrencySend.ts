@@ -4,6 +4,4 @@
 */
 
 export const send = () => {
-    // 
-    let 
 }
