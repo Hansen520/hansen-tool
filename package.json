@@ -1,16 +1,15 @@
 {
   "name": "hansen-tool",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "web的一些工具集函数,Hansen-tool",
   "type": "module",
   "main": "release/index.esm.js",
-  "module": "release/index.cjs.js",
   "unpkg": "release/index.global.js",
   "types": "release/index.d.ts",
   "scripts": {
     "node": "node examples/server.js",
     "dev": "node ./script/dev.mjs runtime -f global -s",
-    "build": "node ./script/pro.mjs -f global@esm@cjs"
+    "build": "node ./script/pro.mjs -f global@esm"
   },
   "buildOptions": {
     "formats": "global"
@@ -55,6 +54,7 @@
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.1",
     "@types/lodash-es": "^4.17.12",
     "@types/minimist": "^1.2.5",

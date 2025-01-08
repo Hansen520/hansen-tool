@@ -1,10 +1,10 @@
 export default class Storage {
     /**
-     * @description 设置本地存储
+     * @description 设置本地存储，设置为string类型或者为转换后的的JSON
      * @param {string} key
      * @return {*}
      */
-    static setStorage: (key: string, value: any) => void;
+    static setStorage: (key: string, value: Object | string) => void;
     /**
      * @description 获取本地存储
      * @param {string} key
@@ -16,7 +16,7 @@ export default class Storage {
      * @param {string} key
      * @return {*}
      */
-    static updateStorage: (key: string, newValue: any) => void;
+    static updateStorage: (key: string, newValue: string | Object) => void;
     /**
      * @description 移除某个本地存储
      * @param {string} key

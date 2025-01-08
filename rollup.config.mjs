@@ -7,8 +7,9 @@ import { fileURLToPath } from "node:url"
 import ts from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import pkg from './package.json' assert { type: 'json' };
+import commonjs from "@rollup/plugin-commonjs"; // 将CommonJS模块转换为ESM
+import terser from '@rollup/plugin-terser';
+import pkg from './package.json' with { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url); // 获取当前文件的绝对路径
 const packagesDir = path.resolve(dirname(__filename), "src/index");
@@ -22,10 +23,6 @@ const outputConfig = {
   esm: {
     file: path.resolve(`release/${name}.esm.js`),
     format: "es",
-  },
-  cjs: {
-    file: path.resolve(`release/${name}.cjs.js`),
-    format: "cjs",
   },
   global: {
     file: path.resolve(`release/${name}.global.js`),
@@ -54,6 +51,7 @@ function createConfig(format, output) {
         tsconfig: "tsconfig.json",
       }),
       commonjs(),
+      terser(),
       resolve(),
     ],
   };

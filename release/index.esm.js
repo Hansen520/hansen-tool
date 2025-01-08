@@ -1006,7 +1006,75 @@ function uniq(array) {
   return (array && array.length) ? baseUniq(array) : [];
 }
 
-// import Storage from "./storage.ts";
+/*
+ * @Date: 2023-11-20 13:25:44
+ * @Description: description
+ */
+class Storage {
+    /**
+     * @description 设置本地存储
+     * @param {string} key
+     * @return {*}
+     */
+    static setStorage = (key, value) => {
+        if (typeof value === "object") {
+            window.localStorage.setItem(key, JSON.stringify(value));
+        }
+        else {
+            window.localStorage.setItem(key, value);
+        }
+    };
+    /**
+     * @description 获取本地存储
+     * @param {string} key
+     * @return {*}
+     */
+    static getStorage = (key) => {
+        const value = window.localStorage.getItem(key);
+        try {
+            if (value && value != "" && typeof value === "object") {
+                return JSON.parse(value);
+            }
+            else {
+                return value;
+            }
+        }
+        catch (error) {
+            return value;
+        }
+    };
+    /**
+     * @description 更新本地存储
+     * @param {string} key
+     * @return {*}
+     */
+    static updateStorage = (key, newValue) => {
+        try {
+            const oldValue = Storage.getStorage(key);
+            const _newValue = typeof newValue === "string" ? newValue : Object.assign({}, oldValue, newValue);
+            Storage.setStorage(key, _newValue);
+        }
+        catch (error) {
+            throw error;
+        }
+    };
+    /**
+     * @description 移除某个本地存储
+     * @param {string} key
+     * @return {*}
+     */
+    static removeStorage = (key) => {
+        window.localStorage.removeItem(key);
+    };
+    /**
+     * @description 清空本地存储
+     * @return {*}
+     */
+    static clearStorage = () => {
+        window.localStorage.clear();
+    };
+}
+
 /**
  * @description 获取rgb随机颜色值，一般用于测试用
  * @type
@@ -1083,114 +1151,6 @@ const colorHexToRgba = (hex, alpha = 1) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 /**
- * @description 金额逗号分隔
- * @type
- * @default
- * @example 1314520.86 => 1,314,520.86
- */
-const formatPrice = function (number = 0) {
-    /* 设置边界值 */
-    if (number === 0)
-        return "0";
-    // 没有则返回undefined
-    if (!number)
-        return undefined;
-    let n = number;
-    let r = "";
-    let temp;
-    do {
-        // 求模的值， 用于获取高三位，这里可能有小数
-        const mod = n % 1000;
-        // 值是不是大于1，是继续的条件
-        n = n / 1000;
-        // 高三位
-        temp = ~~mod;
-        // 1.填充: n > 1 循环未结束， 就要填充为比如 1 => 001
-        // 不然temp = ~~mod的时候, 1 001， 就会变成 "11"
-        // 2.拼接“,”
-        r = (n >= 1 ? "".concat(temp).padStart(3, "0") : temp) + (!!r ? "," + r : "");
-    } while (n >= 1);
-    const strNumber = number + "";
-    const index = strNumber.indexOf(".");
-    // 拼接小数部分
-    if (index >= 0) {
-        r += strNumber.substring(index);
-    }
-    return r;
-};
-/**
- * @description: 通过文件地址下载文件
- * @param {*} href 下载路径
- * @param {*} fileName 文件名
- */
-const fileDownload = (href, fileName) => {
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.setAttribute("target", "_self");
-    fileName && a.setAttribute("download", fileName);
-    a.href = href;
-    a.setAttribute("href", href);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    return true;
-};
-/**
- * @description: 强制修改稿响应头下载文件
- * @param {*} url 下载路径
- * @param {*} fileName 文件名
- */
-const fileDownloadByType = (url, fileName) => {
-    fetch(url, {
-        method: "get",
-    })
-        .then((res) => {
-        if (res.status !== 200) {
-            return res.json();
-        }
-        return res.arrayBuffer();
-    })
-        .then((blobRes) => {
-        // 生成 Blob 对象，设置 type 等信息
-        const e = new Blob([blobRes], {
-            type: "application/octet-stream",
-        });
-        // 将 Blob 对象转为 url
-        const link = window.URL.createObjectURL(e);
-        const a = document.createElement("a");
-        a.href = link;
-        a.download = fileName;
-        a.click();
-    })
-        .catch((err) => {
-        console.error(err);
-    });
-};
-/**
- * @description: 通过后端接口下载文件
- * @param {*} filename 文件名
- * @param {*} blobContent 后端返回二进制流数据
- * @param {*} type 文件类型
- *
- */
-const fileDownloadByRes = (filename, blobContent, type = "vnd.openxmlformats-officedocument.spreadsheetml.sheet") => {
-    const blob = new Blob([blobContent], { type: `application/${type};charset=utf-8` });
-    // 获取heads中的filename文件名
-    const downloadElement = document.createElement("a");
-    // 创建下载的链接
-    const href = window.URL.createObjectURL(blob);
-    downloadElement.href = href;
-    // 下载后文件名
-    downloadElement.download = filename;
-    document.body.appendChild(downloadElement);
-    // 点击下载
-    downloadElement.click();
-    // 下载完成移除元素
-    document.body.removeChild(downloadElement);
-    // 释放掉blob对象
-    window.URL.revokeObjectURL(href);
-};
-/**
  * @description: 滑滚动页面到顶部
  */
 const scrollToTop = () => {
@@ -1217,96 +1177,6 @@ function getBetweenYears(startYear, endYear) {
     }
     return [...years].reverse();
 }
-/**
- * @description: 函数睡眠
- */
-const sleep = (time = 10, fn) => {
-    return new Promise((resolve) => {
-        const timer = setTimeout(() => {
-            clearTimeout(timer);
-            fn && typeof fn === "function" && fn();
-            resolve(true);
-        }, time);
-    });
-};
-/**
- * @description: 获取文件的后缀名
- * @param {*} filename
- */
-const getExt = (filename) => {
-    return filename.split(".").pop().toLocaleLowerCase();
-};
-/**
- * @description: 判断浏览器内核
- */
-const checkBrowser = () => {
-    const t = window.navigator.userAgent.toLowerCase();
-    return t.indexOf("msie") >= 0
-        ? {
-            // ie < 11
-            type: "IE",
-            version: Number(t.match(/msie ([\d]+)/)[1]),
-        }
-        : t.match(/trident\/.+?rv:(([\d.]+))/)
-            ? {
-                // ie 11
-                type: "IE",
-                version: 11,
-            }
-            : t.indexOf("edge") >= 0
-                ? {
-                    type: "Edge",
-                    version: Number(t.match(/edge\/([\d]+)/)[1]),
-                }
-                : t.indexOf("firefox") >= 0
-                    ? {
-                        type: "Firefox",
-                        version: Number(t.match(/firefox\/([\d]+)/)[1]),
-                    }
-                    : t.indexOf("chrome") >= 0
-                        ? {
-                            type: "Chrome",
-                            version: Number(t.match(/chrome\/([\d]+)/)[1]),
-                        }
-                        : t.indexOf("opera") >= 0
-                            ? {
-                                type: "Opera",
-                                version: Number(t.match(/opera.([\d]+)/)[1]),
-                            }
-                            : t.indexOf("Safari") >= 0
-                                ? {
-                                    type: "Safari",
-                                    version: Number(t.match(/version\/([\d]+)/)[1]),
-                                }
-                                : {
-                                    type: t,
-                                    version: -1,
-                                };
-};
-/**
- * @description: 获取随机字符串  len为字符串长度
- * @param {*} len
- */
-const randomString = (len) => {
-    const chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789";
-    const strLen = chars.length;
-    let randomStr = "";
-    for (let i = 0; i < len; i++) {
-        randomStr += chars.charAt(Math.floor(Math.random() * strLen));
-    }
-    return randomStr;
-};
-/**
- * @description: 生成指定范围随机数
- * @param {*} min
- * @param {*} max
- */
-const randomRange = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-/**
- * @description: 数组中获取随机数
- * @param {*} arr
- */
-const randomNum = (arr) => arr[Math.floor(Math.random() * arr.length)];
 /**
  * @description: 根据递归数组获取映射的路径
  * @param {*} array 要被递归的数组
@@ -1376,79 +1246,6 @@ const hasDuplicates = (arr) => {
 const phoneEncryption = (phone) => {
     return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
 };
-/**
- * 格式化价格数额为字符串
- * 可对小数部分进行填充，默认不填充
- * @param price 价格数额，以分为单位!
- * @param fill 是否填充小数部分 0-不填充 1-填充第一位小数 2-填充两位小数
- */
-const priceFormat = (price, fill = 0) => {
-    if (isNaN(price) || price === null || price === Infinity) {
-        return price;
-    }
-    let priceFormatValue = Math.round(parseFloat(`${price}`) * 10 ** 8) / 10 ** 8; // 恢复精度丢失
-    priceFormatValue = `${Math.ceil(priceFormatValue) / 100}`; // 向上取整，单位转换为元，转换为字符串
-    if (fill > 0) {
-        // 补充小数位数
-        if (priceFormatValue.indexOf(".") === -1) {
-            priceFormatValue = `${priceFormatValue}.`;
-        }
-        const n = fill - priceFormatValue.split(".")[1]?.length;
-        for (let i = 0; i < n; i++) {
-            priceFormatValue = `${priceFormatValue}0`;
-        }
-    }
-    return priceFormatValue;
-};
-/**
- * 格式化文件大小，将字节转换为 KB、MB、GB 或 TB。
- * @param {number} sizeInBytes - 文件大小，以字节为单位
- * @returns {string} 格式化后的文件大小，包括单位
- * @example formatFileSize(123456789) => 117.74 MB
- */
-const formatFileSize = (sizeInBytes) => {
-    // 如果大小为0，直接返回
-    if (sizeInBytes === 0)
-        return '0 Bytes';
-    // 定义单位数组
-    const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    // 计算指数，即单位数组的索引
-    const exponent = Math.floor(Math.log(sizeInBytes) / Math.log(1024));
-    // 根据指数计算大小，并保留两位小数
-    const size = (sizeInBytes / Math.pow(1024, exponent)).toFixed(2);
-    // 获取对应的单位
-    const unit = units[exponent];
-    // 返回格式化后的字符串
-    return `${size}${unit}`;
-};
-/**
- * 将文件大小从一个单位转换为另一个单位。
- *
- * @param {number} size 文件大小。
- * @param {string} fromUnit 初始单位（'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'）。
- * @param {string} toUnit 目标单位（'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'）。
- * @param {number} [decimalPoint=2] 结果保留的小数位数，默认为2。
- * @return {string} 转换后的文件大小，带单位。
- * @example console.log(convertFileSize(1, 'GB', 'MB')); // 输出: 1024.00 MB
- */
-const convertFileSize = (size, fromUnit, toUnit, decimalPoint = 2) => {
-    // 定义单位与字节之间的转换关系
-    const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    // 获取初始单位和目标单位的索引
-    const fromIndex = units.indexOf(fromUnit);
-    const toIndex = units.indexOf(toUnit);
-    // 如果单位不在列表中，抛出错误
-    if (fromIndex === -1 || toIndex === -1) {
-        throw new Error('Invalid units');
-    }
-    // 计算初始单位与目标单位之间的转换系数
-    const exponent = toIndex - fromIndex;
-    // 计算结果大小
-    const resultSize = size / Math.pow(1024, exponent);
-    // 返回格式化后的结果
-    return parseFloat(resultSize.toFixed(decimalPoint)) + ' ' + toUnit;
-};
-// export { Storage };
 
-export { checkBrowser, colorHexToRgb, colorHexToRgba, colorRgbToHex, colorRgbaToHex, convertFileSize, fileDownload, fileDownloadByRes, fileDownloadByType, findParentNodeArray, formatFileSize, formatPrice, getBetweenYears, getExt, hasDuplicates, phoneEncryption, priceFormat, randomNum, randomRange, randomRgbColor, randomString, scrollToBottom, scrollToTop, sleep };
+export { Storage, colorHexToRgb, colorHexToRgba, colorRgbToHex, colorRgbaToHex, findParentNodeArray, getBetweenYears, hasDuplicates, phoneEncryption, randomRgbColor, scrollToBottom, scrollToTop };
 //# sourceMappingURL=index.esm.js.map
