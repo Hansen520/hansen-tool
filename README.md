@@ -1,5 +1,5 @@
 # hansen-tool
-实用的工具集-tool，一款来在工具库的爱！
+实用的工具集-tool，web的一些工具集函数,包括(树形菜单转换、本地存储、文件下载、文件大小单位转换、金额格式化、浏览器判断)等，一款来在工具库的爱！
 
 ## 简介
 特色，我们开发中一些实用的工具函数，分为二种打包模式esModule，global模式
@@ -32,35 +32,40 @@ hansenTool.Storage.setStorage(key: string, value: string)
 
 具体参数请参考每个函数的typescript文件
 
-| getBetweenYearsArr    | 根据开始年和结束年获取之间的所有日期(包含开始和结束)         |
-| --------------------- | ------------------------------------------------------------ |
-| detectDeviceType      | 设备的判断，判断是移动端还是PC端的用户，利用header头部的userAgent |
-| checkBrowser          | 判断浏览器内核                                               |
-| convertFileSize       | 精准将文件大小从一个单位转换为另一个单位                     |
-| formatFileSize        | 模糊匹配格式化文件大小，将字节转换为 KB、MB、GB 或 TB        |
-| colorRgbaToHex        | rgba的颜色值转为Hex颜色值                                    |
-| colorHexToRgb         | rgba的颜色值转为Hex颜色值                                    |
-| colorHexToRgba        | rgba的颜色值转为Hex颜色值                                    |
-| fileDownload          | 通过文件地址下载文件                                         |
-| fileDownloadByType    | 强制修改稿响应头下载文件                                     |
-| fileDownloadByRes     | 通过后端流文件形式接口下载文件                               |
-| formatPrice           | 金额逗号分隔                                                 |
-| priceFormat           | 格式化价格数额为字符串，例如 priceFormat(12, 4) => 0.1200    |
-| getExt                | 获取文件的后缀名                                             |
-| hasDuplicates         | 判断数组内是否有元素重复，如果有返回true，没有返回false      |
-| phoneEncryption       | 手机号码*加密函数                                            |
-| randomRgbColor        | 获取rgb随机颜色值                                            |
-| randomString          | 获取随机字符串                                               |
-| scrollToTop           | 滑滚动页面到顶部                                             |
-| scrollToBottom        | 滚动到页面底部                                               |
-| sleepFn               | 对某一个函数延迟执行, 异步                                   |
-| sleep                 | 直接延迟睡眠，异步                                           |
-| findParentNodeArray   | 根据递归树形菜单和目标值，获取从根节点到目标节点的路径       |
-| Storage.setStorage    | 设置本地存储，设置为string类型或者为转换后的的JSON           |
-| Storage.getStorage    | 获取本地存储                                                 |
-| Storage.updateStorage | 更新本地存储，如果是字符串直接更新，如果是对象，则合并       |
-| Storage.removeStorage | 移除某个本地存储                                             |
-| Storage.clearStorage  | 清空本地存储                                                 |
+| getBetweenYearsArr         | 根据开始年和结束年获取之间的所有日期(包含开始和结束)         |
+| -------------------------- | :----------------------------------------------------------- |
+| detectDeviceType           | 设备的判断，判断是移动端还是PC端的用户，利用header头部的userAgent |
+| checkBrowser               | 判断浏览器内核                                               |
+| convertFileSize            | 精准将文件大小从一个单位转换为另一个单位                     |
+| formatFileSize             | 模糊匹配格式化文件大小，将字节转换为 KB、MB、GB 或 TB        |
+| colorRgbaToHex             | rgba的颜色值转为Hex颜色值                                    |
+| colorHexToRgb              | rgba的颜色值转为Hex颜色值                                    |
+| colorHexToRgba             | rgba的颜色值转为Hex颜色值                                    |
+| fileDownload               | 通过文件地址下载文件                                         |
+| fileDownloadByType         | 强制修改稿响应头下载文件                                     |
+| fileDownloadByRes          | 通过后端流文件形式接口下载文件                               |
+| formatPrice                | 金额逗号分隔                                                 |
+| priceFormat                | 格式化价格数额为字符串，例如 priceFormat(12, 4) => 0.1200    |
+| getExt                     | 获取文件的后缀名                                             |
+| hasDuplicates              | 判断数组内是否有元素重复，如果有返回true，没有返回false      |
+| phoneEncryption            | 手机号码*加密函数                                            |
+| randomRgbColor             | 获取rgb随机颜色值                                            |
+| randomString               | 获取随机字符串                                               |
+| scrollToTop                | 滑滚动页面到顶部                                             |
+| scrollToBottom             | 滚动到页面底部                                               |
+| sleepFn                    | 对某一个函数延迟执行, 异步                                   |
+| sleep                      | 直接延迟睡眠，异步                                           |
+| findParentNodeArray        | 根据递归树形菜单和目标值，获取从根节点到目标节点的路径       |
+| treeToList                 | 树形菜单转为铺平为数组，并为每个节点添加层级和父节点信息     |
+| listToTree                 | 数组转为树形菜单                                             |
+| findNodeInTree             | 精准查找想要的某节点字段的信息，并返回该节点                 |
+| findNodeInTreeByCondition  | 根据条件，精准找到想要的某节点字段的信息，并返回该节点，这个功能和findNodeInTree差不多 |
+| findNodesInTreeByCondition | 根据条件，查找所有满足条件的节点，并返回一个集合             |
+| Storage.setStorage         | 设置本地存储，设置为string类型或者为转换后的的JSON           |
+| Storage.getStorage         | 获取本地存储                                                 |
+| Storage.updateStorage      | 更新本地存储，如果是字符串直接更新，如果是对象，则合并       |
+| Storage.removeStorage      | 移除某个本地存储                                             |
+| Storage.clearStorage       | 清空本地存储                                                 |
 
 ## 快速使用
 简单的接入文档

@@ -31,7 +31,7 @@ export const convertFileSize = (size: number, fromUnit: string, toUnit: string, 
 
 
   /**
- * 模糊匹配格式化文件大小，将字节转换为 KB、MB、GB 或 TB。
+ * 模糊匹配格式化文件大小，将字节转换为 KB、MB、GB 或 TB。这边主要看是否为1024的倍数
  * @param {number} sizeInBytes - 文件大小，以字节为单位
  * @returns {string} 格式化后的文件大小，包括单位
  * @example formatFileSize(123456789) => 117.74 MB

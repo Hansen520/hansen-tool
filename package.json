@@ -1,7 +1,7 @@
 {
   "name": "hansen-tool",
-  "version": "0.4.1",
-  "description": "web的一些工具集函数,Hansen-tool",
+  "version": "0.4.2",
+  "description": "web的一些工具集函数,包括(树形菜单转换、本地存储、文件下载、文件大小单位转换、金额格式化、浏览器判断)等",
   "type": "module",
   "main": "release/index.esm.js",
   "unpkg": "release/index.global.js",
@@ -41,7 +41,14 @@
   },
   "keywords": [
     "tool",
-    "前端工具集合"
+    "工具",
+    "前端工具集合",
+    "树形菜单转换",
+    "本地存储",
+    "文件下载",
+    "文件大小单位转换",
+    "金额格式化",
+    "浏览器判断"
   ],
   "ext": "js, json",
   "author": "Hansen",

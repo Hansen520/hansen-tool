@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>example</title>
     <script src="../release/index.global.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <p>example 测试 Test</p>
     <script>
-        const result = HanTool.Storage.setStorage('e', 1);
-        console.log(typeof result, result)
+      const tree = [
+        {
+          id: 1,
+          name: "节点1",
+          children: [
+            {
+              id: 2,
+              name: "节点1-1",
+              children: [
+                {
+                  id: 4,
+                  name: "节点1-1-1",
+                },
+              ],
+            },
+            {
+              id: 3,
+              name: "节点1-2",
+            },
+          ],
+        },
+      ];
+
+      const result = HanTool.findNodeInTree(tree, '1-1');
+      console.log(typeof result, result);
     </script>
-</body>
+  </body>
 </html>

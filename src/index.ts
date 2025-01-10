@@ -11,7 +11,7 @@ import { phoneEncryption } from "./phoneEncryption.js";
 import { randomNum, randomRange, randomRgbColor, randomString } from "./randomValue.js";
 import { scrollToBottom, scrollToTop } from "./scroll.js";
 import { sleepFn, sleep } from "./sleep.js";
-import { findParentNodeArray } from "./treeTran.js";
+import { findParentNodeList, treeToList, listToTree, findNodeInTree, findNodeInTreeByCondition, findNodesInTreeByCondition } from "./treeTran.js";
 
 export {
   Storage,
@@ -39,5 +39,10 @@ export {
   scrollToTop,
   sleepFn,
   sleep,
-  findParentNodeArray
+  findParentNodeList,
+  treeToList,
+  listToTree,
+  findNodeInTree,
+  findNodeInTreeByCondition,
+  findNodesInTreeByCondition
 };

@@ -11,6 +11,6 @@ import { phoneEncryption } from "./phoneEncryption.js";
 import { randomNum, randomRange, randomRgbColor, randomString } from "./randomValue.js";
 import { scrollToBottom, scrollToTop } from "./scroll.js";
 import { sleepFn, sleep } from "./sleep.js";
-import { findParentNodeArray } from "./treeTran.js";
-export { Storage, getBetweenYearsArr, detectDeviceType, checkBrowser, convertFileSize, formatFileSize, colorRgbaToHex, colorHexToRgba, colorHexToRgb, fileDownload, fileDownloadByRes, fileDownloadByType, formatPrice, priceFormat, getExt, hasDuplicates, phoneEncryption, randomNum, randomRange, randomRgbColor, randomString, scrollToBottom, scrollToTop, sleepFn, sleep, findParentNodeArray };
+import { findParentNodeList, treeToList, listToTree, findNodeInTree, findNodeInTreeByCondition, findNodesInTreeByCondition } from "./treeTran.js";
+export { Storage, getBetweenYearsArr, detectDeviceType, checkBrowser, convertFileSize, formatFileSize, colorRgbaToHex, colorHexToRgba, colorHexToRgb, fileDownload, fileDownloadByRes, fileDownloadByType, formatPrice, priceFormat, getExt, hasDuplicates, phoneEncryption, randomNum, randomRange, randomRgbColor, randomString, scrollToBottom, scrollToTop, sleepFn, sleep, findParentNodeList, treeToList, listToTree, findNodeInTree, findNodeInTreeByCondition, findNodesInTreeByCondition };
 //# sourceMappingURL=index.d.ts.map
