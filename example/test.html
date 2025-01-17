@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <title>example</title>
-    <script src="../release/index.global.js"></script>
+    <script src="https://unpkg.com/hansen-tool"></script>
   </head>
   <body>
     <p>example 测试 Test</p>
     <script>
-      const res = HanTool.convertFileSize(213213213, 'B', 'MB');
-      console.log(res);
+      const res = HanTool.formatPrice(Infinity);
+      console.log(res, 2);
     </script>
   </body>
 </html>
