@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "release",
-    "types": ["node"],
+    "types": ["jest", "node"],
     "target": "esnext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -11,8 +11,10 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "allowImportingTsExtensions": true, // 允许导入 .ts 文件
+    "emitDeclarationOnly":  true
   },
   "include": ["src"],
-  "exclude": ["src/**/*.test.tsx", "src/**/*.stories.tsx", "dist", "release", "node_modules"]
+  "exclude": ["src/**/*.test.tsx", "src/**/*.stories.tsx", "src/tests/*.spec.ts", "dist", "release", "node_modules"]
 }

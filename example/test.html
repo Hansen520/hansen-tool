@@ -8,31 +8,8 @@
   <body>
     <p>example 测试 Test</p>
     <script>
-      const tree = [
-        {
-          id: 1,
-          name: "节点1",
-          children: [
-            {
-              id: 2,
-              name: "节点1-1",
-              children: [
-                {
-                  id: 4,
-                  name: "节点1-1-1",
-                },
-              ],
-            },
-            {
-              id: 3,
-              name: "节点1-2",
-            },
-          ],
-        },
-      ];
-
-      const result = HanTool.findNodeInTree(tree, '1-1');
-      console.log(typeof result, result);
+      const res = HanTool.convertFileSize(213213213, 'B', 'MB');
+      console.log(res);
     </script>
   </body>
 </html>

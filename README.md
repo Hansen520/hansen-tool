@@ -1,3 +1,7 @@
+<!--
+ * @Date: 2023-09-20 10:16:06
+ * @Description: description
+-->
 # hansen-tool
 实用的工具集-tool，web的一些工具集函数,包括(树形菜单转换、本地存储、文件下载、文件大小单位转换、金额格式化、浏览器判断)等，一款来在工具库的爱！
 
@@ -45,7 +49,6 @@ hansenTool.Storage.setStorage(key: string, value: string)
 | fileDownloadByType         | 强制修改稿响应头下载文件                                     |
 | fileDownloadByRes          | 通过后端流文件形式接口下载文件                               |
 | formatPrice                | 金额逗号分隔                                                 |
-| priceFormat                | 格式化价格数额为字符串，例如 priceFormat(12, 4) => 0.1200    |
 | getExt                     | 获取文件的后缀名                                             |
 | hasDuplicates              | 判断数组内是否有元素重复，如果有返回true，没有返回false      |
 | phoneEncryption            | 手机号码*加密函数                                            |
