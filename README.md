@@ -49,6 +49,7 @@ hansenTool.Storage.setStorage(key: string, value: string)
 | fileDownloadByType         | 强制修改稿响应头下载文件                                     |
 | fileDownloadByRes          | 通过后端流文件形式接口下载文件                               |
 | formatPrice                | 金额逗号分隔                                                 |
+| convertCurrency            | 将金额转为为繁体字                                           |
 | getExt                     | 获取文件的后缀名                                             |
 | hasDuplicates              | 判断数组内是否有元素重复，如果有返回true，没有返回false      |
 | phoneEncryption            | 手机号码*加密函数                                            |

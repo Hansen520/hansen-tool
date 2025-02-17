@@ -4,7 +4,7 @@ import { detectDeviceType, checkBrowser } from "./checkBrowser.js";
 import { colorRgbaToHex, colorHexToRgba, colorHexToRgb } from "./colorToTran.js"; // 颜色转换
 import { convertFileSize, formatFileSize } from "./convertFileSize.js";
 import { fileDownload, fileDownloadByRes, fileDownloadByType } from "./fileDownload.js";
-import { formatPrice } from "./formatPrice.js";
+import { formatPrice, convertCurrency } from "./formatPrice.js";
 import { getExt } from "./getExt.js";
 import { hasDuplicates } from "./hasDuplicates.js";
 import { phoneEncryption } from "./phoneEncryption.js";
@@ -27,6 +27,7 @@ export {
   fileDownloadByRes,
   fileDownloadByType,
   formatPrice,
+  convertCurrency,
   getExt,
   hasDuplicates,
   phoneEncryption,
