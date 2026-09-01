@@ -1,21 +1,7 @@
-/**
- * @description: 通过文件地址下载文件
- * @param {*} href 下载路径
- * @param {*} fileName 文件名
- */
-export declare const fileDownload: (href: string, fileName: string) => boolean;
-/**
- * @description: 强制修改稿响应头下载文件
- * @param {*} url 下载路径
- * @param {*} fileName 文件名
- */
-export declare const fileDownloadByType: (url: string, fileName: string) => void;
-/**
- * @description: 通过后端流文件形式接口下载文件
- * @param {*} filename 文件名
- * @param {*} blobContent 后端返回二进制流数据
- * @param {*} type 文件类型
- *
- */
-export declare const fileDownloadByRes: (filename: string, blobContent: any, type?: string) => void;
+/** 通过文件地址触发浏览器下载。 */
+export declare const fileDownload: (href: string, fileName?: string) => true;
+/** 请求远程文件并触发下载，HTTP 错误会 reject。 */
+export declare const fileDownloadByType: (url: string, fileName: string) => Promise<void>;
+/** 将二进制内容转换为 Blob 并触发下载。 */
+export declare const fileDownloadByRes: (filename: string, blobContent: BlobPart, type?: string) => void;
 //# sourceMappingURL=fileDownload.d.ts.map

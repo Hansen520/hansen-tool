@@ -1,196 +1,176 @@
-import { isArray } from "lodash-es";
+export type TreeNodeId = string | number;
 
-/* 树形结构数据类型定义 */
-interface TreeProps {
-  id: string;
-  name: string;
-  children?: TreeProps[];
-  [key: string]: any;
+export interface TreeNode {
+  children?: TreeNode[];
+  [key: string]: unknown;
 }
 
-/* 节点属性类型定义 */
-interface TreeNodeProps {
-  id: string;
-  name: string;
-  [key: string]: any;
+export interface FlatTreeNode extends TreeNode {
+  id: TreeNodeId;
+  parentId: TreeNodeId | null;
 }
 
-/* 条件函数类型定义 */
-type ConditionFunction = (node: TreeProps) => boolean;
+export interface FlattenedTreeNode extends TreeNode {
+  level: number;
+  parent?: FlattenedTreeNode;
+}
 
-/**
- * @description: 根据递归树形菜单和目标值，获取从根节点到目标节点的路径
- * @param {*} list 要被递归的数组
- * @param {*} parentSubjectCode，要找到的目标的值，比如下面例子中的 'yy' 设置为目标值
- * @param {*} period 对哪个字段进行映射，默认为value，非必填
- * @example [
-    {
-      value: "a",
-      children: [
-        {
-          value: "g4",
-          label: '3',
-          children: [
-          {
-            value: 'yy'
-          }
-      ]}],
-    }] ====> ['a', 'g4', 'yy']
- */
-export const findParentNodeList = (list: string[], parentSubjectCode: string, period: string = "value") => {
-  if (!isArray(list)) {
-    throw "传入的为非数组，请重新传入";
-  }
-  const parentSubjectStock: string[] = []; // 存储父节点
-  let going = true; // 是否已找到要查到的节点
-  const findParentNode = function (list: string[], code: string) {
-    list.forEach((item: any) => {
-      if (!going) {
-        return;
-      }
-      parentSubjectStock.push(item);
-      if (item[period] === code) {
-        going = false;
-      } else if (item.children) {
-        findParentNode(item.children, code);
-      } else {
-        parentSubjectStock.pop();
-      }
-    });
-    if (going) parentSubjectStock.pop();
-  };
-  findParentNode(list, parentSubjectCode);
-  return parentSubjectStock.map((item) => item[period as any]);
+export type TreeCondition = (node: TreeNode) => boolean;
+
+function assertTreeArray(tree: unknown, name = "tree"): asserts tree is TreeNode[] {
+  if (!Array.isArray(tree)) throw new TypeError(`${name} must be an array`);
+}
+
+const getChildren = (node: TreeNode): TreeNode[] => {
+  if (node.children === undefined) return [];
+  if (!Array.isArray(node.children)) throw new TypeError("node.children must be an array");
+  return node.children;
 };
 
-/**
- * @description: 树形菜单转为铺平为数组，并为每个节点添加层级和父节点信息
- * @param {*} tree 要被处理的树形菜单
- * @param {*} result 存储结果的数组 非必填
- * @param {*} level 对哪个字段进行映射，默认为value 非必填
- * @param {*} parent 对哪个字段进行映射，默认为value 非必填
- * @example 
- **/
+/** 查找从根节点到目标值的字段路径，未找到时返回空数组。 */
+export const findParentNodeList = (
+  list: TreeNode[],
+  targetValue: unknown,
+  field = "value",
+): unknown[] => {
+  assertTreeArray(list, "list");
+  const path: TreeNode[] = [];
+  const visiting = new Set<TreeNode>();
+
+  const visit = (nodes: TreeNode[]): boolean => {
+    for (const node of nodes) {
+      if (visiting.has(node)) throw new Error("tree cannot contain cycles");
+      visiting.add(node);
+      path.push(node);
+      if (node[field] === targetValue || visit(getChildren(node))) return true;
+      path.pop();
+      visiting.delete(node);
+    }
+    return false;
+  };
+
+  return visit(list) ? path.map((node) => node[field]) : [];
+};
+
+/** 将树形菜单铺平，并为每个节点添加 level 和 parent。 */
 export const treeToList = (
-  tree: Array<TreeProps> = [],
-  result: Array<TreeProps> = [],
+  tree: TreeNode[] = [],
+  result: FlattenedTreeNode[] = [],
   level = 0,
-  parent: TreeProps
-) => {
-  if (!isArray(tree)) {
-    throw new Error("Expected an array for the tree structure.");
+  parent?: FlattenedTreeNode,
+): FlattenedTreeNode[] => {
+  assertTreeArray(tree);
+  if (!Array.isArray(result)) throw new TypeError("result must be an array");
+  if (!Number.isSafeInteger(level) || level < 0) {
+    throw new RangeError("level must be a non-negative safe integer");
   }
 
-  tree.forEach((node) => {
-    // 这里可以根据需要添加额外的属性，例如层级(level)和父节点(parent)
-    const newNode = {
-      ...node,
-      level: level,
-      parent: parent,
-    };
-
-    // 将当前节点添加到结果数组中
-    result.push(newNode);
-
-    // 如果当前节点有子节点，递归调用treeToList
-    if (node.children && node.children.length > 0) {
-      treeToList(node.children, result, level + 1, newNode);
+  const visiting = new Set<TreeNode>();
+  const flatten = (nodes: TreeNode[], currentLevel: number, currentParent?: FlattenedTreeNode): void => {
+    for (const node of nodes) {
+      if (visiting.has(node)) throw new Error("tree cannot contain cycles");
+      visiting.add(node);
+      const flattened: FlattenedTreeNode = { ...node, level: currentLevel, parent: currentParent };
+      result.push(flattened);
+      flatten(getChildren(node), currentLevel + 1, flattened);
+      visiting.delete(node);
     }
-  });
+  };
 
+  flatten(tree, level, parent);
   return result;
 };
 
-/**
- * @description: 数组转为树形菜单，记住了，每个节点需包含id和parentId字段，也就是父子节点相连的信息
- * @param {*} list 要被处理的数组
- * @param {*} parentId 根节点的parentId，默认为null，这个值会根据你实际的情况而变化
- **/
-export const listToTree = (list: Array<TreeNodeProps> = [], parentId = null) => {
-  if (!isArray(list)) {
-    throw new Error("list must be an array");
+/** 根据 id 和 parentId 将平铺数组转换为树。 */
+export const listToTree = <T extends FlatTreeNode>(
+  list: readonly T[] = [],
+  rootParentId: TreeNodeId | null = null,
+): Array<T & { children: T[] }> => {
+  if (!Array.isArray(list)) throw new TypeError("list must be an array");
+
+  const nodes = new Map<TreeNodeId, T & { children: T[] }>();
+  for (const item of list) {
+    if (nodes.has(item.id)) throw new Error(`duplicate node id: ${String(item.id)}`);
+    nodes.set(item.id, { ...item, children: [] });
   }
 
-  const map = {} as TreeNodeProps;
-  const roots = [];
-  for (let i = 0; i < list.length; i++) {
-    map[list[i].id] = { ...list[i], children: [] };
+  for (const item of list) {
+    const seen = new Set<TreeNodeId>([item.id]);
+    let current = item;
+    while (!Object.is(current.parentId, rootParentId)) {
+      if (seen.has(current.parentId)) throw new Error("list cannot contain parent cycles");
+      seen.add(current.parentId);
+      const parent = nodes.get(current.parentId);
+      if (!parent) throw new Error(`parent node not found: ${String(current.parentId)}`);
+      current = parent;
+    }
   }
 
-  for (let i = 0; i < list.length; i++) {
-    const mappedItem = map[list[i].id]; // ** 获取当前节点, 其实这边map已经将指针指向node了，所以后续的map[node.parentId].children里面推送后，map里面推进的值就也就在roots里面了
-    if (list[i].parentId === parentId) {
-      roots.push(mappedItem);
+  const roots: Array<T & { children: T[] }> = [];
+  for (const item of list) {
+    const node = nodes.get(item.id)!;
+    if (Object.is(item.parentId, rootParentId)) {
+      roots.push(node);
     } else {
-      map[list[i].parentId].children.push(mappedItem);
+      nodes.get(item.parentId)!.children.push(node);
     }
   }
   return roots;
 };
 
-/**
- * @description: 精准查找想要的某节点字段的信息，并返回该节点
- * @param {*} tree 要被处理的树形菜单
- * @param {*} targetName 想要查找的目标值
- * @param {*} period 对哪个字段进行映射，默认为name 非必填
- **/
-export const findNodeInTree = (tree: TreeNodeProps[], targetName: any, period: string = "name"): TreeNodeProps | null => {
-  for (const node of tree) {
-    if (node[period] === targetName) {
-      return node; // 找到匹配的节点，返回它
-    }
-    if (node.children) {
-      const foundInChildren = findNodeInTree(node.children, period, targetName);
-      if (foundInChildren) {
-        // return node
-        return foundInChildren; // 在子节点中找到匹配的节点，返回它
-      }
-    }
+/** 按指定字段查找第一个匹配节点。 */
+export const findNodeInTree = (
+  tree: TreeNode[],
+  targetValue: unknown,
+  field = "name",
+): TreeNode | null => {
+  assertTreeArray(tree);
+  const stack = [...tree].reverse();
+  const visited = new Set<TreeNode>();
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (visited.has(node)) throw new Error("tree cannot contain cycles");
+    visited.add(node);
+    if (node[field] === targetValue) return node;
+    stack.push(...getChildren(node).slice().reverse());
   }
-  return null; // 如果没有找到匹配的节点，返回null
+  return null;
 };
 
-/**
- * @description: 根据条件，精准找到想要的某节点字段的信息，并返回该节点
- * @param {*} tree 要被处理的树形菜单
- * @param {*} condition 想要查找的条件
- * @example: (node) => node.name === 'test'
- **/
-export const findNodeInTreeByCondition = (tree: Array<TreeNodeProps>, condition: ConditionFunction): TreeNodeProps | null => {
-  for (const node of tree) {
-    if (condition(node)) {
-      return node; // 如果节点满足条件，返回该节点
-    }
-    if (node.children) {
-      const foundInChildren = findNodeInTreeByCondition(node.children, condition);
-      if (foundInChildren) {
-        return foundInChildren; // 如果在子节点中找到满足条件的节点，返回该节点
-      }
-    }
+/** 根据条件查找第一个匹配节点。 */
+export const findNodeInTreeByCondition = (
+  tree: TreeNode[],
+  condition: TreeCondition,
+): TreeNode | null => {
+  assertTreeArray(tree);
+  if (typeof condition !== "function") throw new TypeError("condition must be a function");
+  const stack = [...tree].reverse();
+  const visited = new Set<TreeNode>();
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (visited.has(node)) throw new Error("tree cannot contain cycles");
+    visited.add(node);
+    if (condition(node)) return node;
+    stack.push(...getChildren(node).slice().reverse());
   }
-  return null; // 如果没有找到满足条件的节点，返回null
+  return null;
 };
 
-
-/**
- * @description: 根据条件，查找所有满足条件的节点，并返回一个集合
- * @param {*} tree 要被处理的树形菜单
- * @param {*} condition 想要查找的条件
- * @example: 
- **/
-export const findNodesInTreeByCondition = (tree: TreeProps,  condition: ConditionFunction) => {
-  const result = [] as TreeNodeProps[]; // 用于存储符合条件的节点
-
-  const traverse = (node: TreeNodeProps) => {
-    // 判断是否符合搜索值得条件
-    if (condition(node)) {
-      result.push(node); // 如果节点满⾜条件，将其添加到结果数组
-    }
-    for (const child of node.children) {
-      traverse(child); // 递归遍历每个子节点
-    }
+/** 根据条件查找所有匹配节点，支持单个根节点或根节点数组。 */
+export const findNodesInTreeByCondition = (
+  tree: TreeNode | TreeNode[],
+  condition: TreeCondition,
+): TreeNode[] => {
+  if (typeof condition !== "function") throw new TypeError("condition must be a function");
+  const stack = (Array.isArray(tree) ? tree : [tree]).slice().reverse();
+  const result: TreeNode[] = [];
+  const visited = new Set<TreeNode>();
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (visited.has(node)) throw new Error("tree cannot contain cycles");
+    visited.add(node);
+    if (condition(node)) result.push(node);
+    stack.push(...getChildren(node).slice().reverse());
   }
-
-  traverse(tree); // 从根节点开始遍历
-  return result; // 返回所有符合条件的节点
-}
+  return result;
+};

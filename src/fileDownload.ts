@@ -1,82 +1,57 @@
-/*
- * @Date: 2025-01-08 11:21:19
- * @Description: 文件下载
- */
-/**
- * @description: 通过文件地址下载文件
- * @param {*} href 下载路径
- * @param {*} fileName 文件名
- */
-export const fileDownload = (href: string, fileName: string) => {
-  const a = document.createElement("a");
-  a.style.display = "none";
-  a.setAttribute("target", "_self");
-  fileName && a.setAttribute("download", fileName);
-  a.href = href;
-  a.setAttribute("href", href);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+const getDocument = (): Document => {
+  if (typeof document === "undefined") {
+    throw new Error("file download is only available in a browser environment");
+  }
+  return document;
+};
+
+const triggerDownload = (href: string, fileName?: string): void => {
+  const browserDocument = getDocument();
+  const anchor = browserDocument.createElement("a");
+  anchor.style.display = "none";
+  anchor.target = "_self";
+  anchor.href = href;
+  if (fileName) anchor.download = fileName;
+  browserDocument.body.appendChild(anchor);
+  try {
+    anchor.click();
+  } finally {
+    anchor.remove();
+  }
+};
+
+/** 通过文件地址触发浏览器下载。 */
+export const fileDownload = (href: string, fileName?: string): true => {
+  if (!href) throw new TypeError("href cannot be empty");
+  triggerDownload(href, fileName);
   return true;
 };
 
-/**
- * @description: 强制修改稿响应头下载文件
- * @param {*} url 下载路径
- * @param {*} fileName 文件名
- */
-export const fileDownloadByType = (url: string, fileName: string) => {
-  fetch(url, {
-    method: "get",
-  })
-    .then((res) => {
-      if (res.status !== 200) {
-        return res.json();
-      }
-      return res.arrayBuffer();
-    })
-    .then((blobRes) => {
-      // 生成 Blob 对象，设置 type 等信息
-      const e = new Blob([blobRes], {
-        type: "application/octet-stream",
-      }); // 将arrayBuffer转为blob对象
-      const link = window.URL.createObjectURL(e); // 将 Blob 对象转为 url
-      const a = document.createElement("a");
-      a.href = link;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(link);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+/** 请求远程文件并触发下载，HTTP 错误会 reject。 */
+export const fileDownloadByType = async (url: string, fileName: string): Promise<void> => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Failed to download file: HTTP ${response.status}`);
+
+  const blob = new Blob([await response.arrayBuffer()], { type: "application/octet-stream" });
+  const objectUrl = URL.createObjectURL(blob);
+  try {
+    triggerDownload(objectUrl, fileName);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
 };
 
-/**
- * @description: 通过后端流文件形式接口下载文件
- * @param {*} filename 文件名
- * @param {*} blobContent 后端返回二进制流数据
- * @param {*} type 文件类型
- *
- */
+/** 将二进制内容转换为 Blob 并触发下载。 */
 export const fileDownloadByRes = (
   filename: string,
-  blobContent: any,
-  type = "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-) => {
-  const blob = new Blob([blobContent], { type: `application/${type};charset=utf-8` });
-  // 获取heads中的filename文件名
-  const downloadElement = document.createElement("a");
-  // 创建下载的链接
-  const href = window.URL.createObjectURL(blob);
-  downloadElement.href = href;
-  // 下载后文件名
-  downloadElement.download = filename;
-  document.body.appendChild(downloadElement);
-  // 点击下载
-  downloadElement.click();
-  // 下载完成移除元素
-  document.body.removeChild(downloadElement);
-  // 释放掉blob对象
-  window.URL.revokeObjectURL(href);
+  blobContent: BlobPart,
+  type = "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+): void => {
+  const mimeType = type.includes("/") ? type : `application/${type}`;
+  const objectUrl = URL.createObjectURL(new Blob([blobContent], { type: `${mimeType};charset=utf-8` }));
+  try {
+    triggerDownload(objectUrl, filename);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
 };

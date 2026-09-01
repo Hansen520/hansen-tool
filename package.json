@@ -1,20 +1,33 @@
 {
   "name": "hansen-tool",
-  "version": "0.4.8",
+  "version": "0.5.0",
   "description": "web的一些工具集函数,包括(树形菜单转换、本地存储、文件下载、文件大小单位转换、金额格式化、浏览器判断)等",
   "type": "module",
-  "main": "release/index.esm.js",
+  "main": "./release/index.cjs",
+  "module": "./release/index.esm.js",
+  "types": "./release/index.d.ts",
   "unpkg": "release/index.global.js",
-  "types": "release/index.d.ts",
+  "jsdelivr": "release/index.global.js",
+  "exports": {
+    ".": {
+      "types": "./release/index.d.ts",
+      "import": "./release/index.esm.js",
+      "require": "./release/index.cjs",
+      "default": "./release/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
   "scripts": {
     "node": "node examples/server.js",
     "dev": "node ./script/dev.mjs runtime -f global -s",
-    "build": "node ./script/pro.mjs -f global@esm",
+    "build": "node ./script/pro.mjs -f global@esm@cjs",
+    "test": "jest --runInBand",
     "jest": "jest",
     "cover": "jest --coverage"
   },
   "buildOptions": {
-    "formats": "global"
+    "formats": "global@esm@cjs"
   },
   "files": [
     "release",
@@ -66,9 +79,9 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.1",
     "@types/jest": "^29.5.14",
-    "@types/lodash-es": "^4.17.12",
     "@types/minimist": "^1.2.5",
     "execa": "^9.5.2",
+    "jest": "^29.7.0",
     "minimist": "^1.2.8",
     "process": "^0.11.10",
     "rollup": "^4.28.1",
@@ -76,8 +89,5 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
     "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "lodash-es": "^4.17.21"
   }
 }

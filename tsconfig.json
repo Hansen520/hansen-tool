@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "release",
-    "types": ["jest", "node"],
+    "types": ["jest"],
     "target": "esnext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -10,9 +10,10 @@
     "declarationMap": true,  /* Generates a sourcemap for each corresponding '.d.ts' file. */
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "allowImportingTsExtensions": true, // 允许导入 .ts 文件
+    "allowImportingTsExtensions": true, // 允许测试文件导入 .ts 文件
     "emitDeclarationOnly":  true
   },
   "include": ["src"],

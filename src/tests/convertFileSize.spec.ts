@@ -11,3 +11,8 @@ test('convertFileSize', () => {
     expect(convertFileSize(213213213, 'B', 'GB', 3)).toBe('0.199 GB')
     expect(convertFileSize(2.11, 'GB', 'MB')).toBe('2160.64 MB')
 });
+
+test('rejects invalid sizes and precision', () => {
+    expect(() => convertFileSize(-1, 'B', 'KB')).toThrow(RangeError);
+    expect(() => convertFileSize(1, 'B', 'KB', -1)).toThrow(RangeError);
+});

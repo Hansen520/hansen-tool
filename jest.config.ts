@@ -1,10 +1,19 @@
-import { Config } from '@jest/types';
+import type { Config } from "jest";
 
-const config: Config.InitialOptions = {
-    testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'], // 匹配测试文件
-    preset: 'ts-jest', // 使用ts-jest
-    testEnvironment: 'node', // 或者 'jsdom' 如果你正在测试浏览器代码
-    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-    testPathIgnorePatterns: ['/node_modules/', '/release/', '/script/', '/doc/'],
-}
+const config: Config = {
+  cacheDirectory: "<rootDir>/node_modules/.cache/jest",
+  testMatch: ["**/?(*.)+(spec|test).[jt]s?(x)"],
+  testEnvironment: "node",
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  testPathIgnorePatterns: ["/node_modules/", "/release/", "/script/", "/doc/"],
+  transform: {
+    "^.+\\.tsx?$": ["ts-jest", {
+      tsconfig: {
+        module: "CommonJS",
+        moduleResolution: "Node",
+      },
+    }],
+  },
+};
+
 export default config;

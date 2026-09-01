@@ -1,46 +1,33 @@
-/*
- * @Date: 2025-01-08 11:13:17
- * @Description: 获取随机字符串、随机数范围、随机数组中取值
- */
+const RANDOM_CHARACTERS = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789!@#$%^&#*";
 
-/**
- * @description 获取rgb随机颜色值，一般用于测试用
- * @type
- * @default
- * @example randomRgbColor()
- */
-export const randomRgbColor = () => {
-  const r = Math.floor(Math.random() * 255);
-  const g = Math.floor(Math.random() * 255);
-  const b = Math.floor(Math.random() * 255);
-  return `rgb(${r},${g},${b})`;
+export const randomRgbColor = (): string => {
+  const channel = (): number => Math.floor(Math.random() * 256);
+  return `rgb(${channel()},${channel()},${channel()})`;
 };
 
-/**
- * @description: 获取随机字符串
- * @param {*} len 字符串长度
- */
-export const randomString = (len: number) => {
-  const chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789!@#$%^&#*";
-  const strLen = chars.length;
-  let randomStr = "";
-  for (let i = 0; i < len; i++) {
-    randomStr += chars.charAt(Math.floor(Math.random() * strLen));
+export const randomString = (length: number): string => {
+  if (!Number.isSafeInteger(length) || length < 0) {
+    throw new RangeError("length must be a non-negative safe integer");
   }
-  return randomStr;
+  let result = "";
+  for (let index = 0; index < length; index++) {
+    result += RANDOM_CHARACTERS.charAt(Math.floor(Math.random() * RANDOM_CHARACTERS.length));
+  }
+  return result;
 };
 
+export const randomRange = (min: number, max: number): number => {
+  if (!Number.isSafeInteger(min) || !Number.isSafeInteger(max)) {
+    throw new TypeError("min and max must be safe integers");
+  }
+  if (min > max) throw new RangeError("min cannot be greater than max");
+  const range = max - min + 1;
+  if (!Number.isSafeInteger(range)) throw new RangeError("range is too large");
+  return Math.floor(Math.random() * range) + min;
+};
 
-
-/**
- * @description: 生成指定范围随机数
- * @param {*} min
- * @param {*} max
- */
-export const randomRange = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-/**
- * @description: 数组中获取随机数
- * @param {*} arr
- */
-export const randomNum = (arr: any[]) => arr[Math.floor(Math.random() * arr.length)];
+export const randomNum = <T>(items: readonly T[]): T => {
+  if (!Array.isArray(items)) throw new TypeError("items must be an array");
+  if (items.length === 0) throw new RangeError("items cannot be empty");
+  return items[Math.floor(Math.random() * items.length)];
+};

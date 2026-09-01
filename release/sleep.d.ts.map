@@ -1,1 +1,1 @@
-{"version":3,"file":"sleep.d.ts","sourceRoot":"","sources":["../src/sleep.ts"],"names":[],"mappings":"AAIA;;;GAGG;AACH,eAAO,MAAM,OAAO,uBAAqB,MAAM,IAAI,qBAQlD,CAAC;AAEF;;;GAGG;AACH,eAAO,MAAM,KAAK,mCAEjB,CAAA"}
+{"version":3,"file":"sleep.d.ts","sourceRoot":"","sources":["../src/sleep.ts"],"names":[],"mappings":"AAMA,eAAO,MAAM,OAAO,GAAI,aAAU,EAAE,WAAW,MAAM,IAAI,KAAG,OAAO,CAAC,IAAI,CAYvE,CAAC;AAEF,eAAO,MAAM,KAAK,GAAI,qBAAkB,KAAG,OAAO,CAAC,IAAI,CAGtD,CAAC"}

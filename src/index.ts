@@ -13,6 +13,11 @@ import { scrollToBottom, scrollToTop } from "./scroll.js";
 import { sleepFn, sleep } from "./sleep.js";
 import { findParentNodeList, treeToList, listToTree, findNodeInTree, findNodeInTreeByCondition, findNodesInTreeByCondition } from "./treeTran.js";
 
+export type { BrowserInfo, BrowserType, DeviceType } from "./checkBrowser.js";
+export type { FileSizeUnit } from "./convertFileSize.js";
+export type { JsonPrimitive, JsonValue } from "./storage.js";
+export type { FlatTreeNode, FlattenedTreeNode, TreeCondition, TreeNode, TreeNodeId } from "./treeTran.js";
+
 export {
   Storage,
   getBetweenYearsArr,

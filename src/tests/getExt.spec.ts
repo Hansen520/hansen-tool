@@ -15,3 +15,9 @@ test('ext xxx.JSON', () => {
 test('xxx.yy.Png', () => {
     expect(getExt('xxx.yy.Png')).toBe('png');    
 });
+
+test('handles URLs and names without extensions', () => {
+    expect(getExt('https://example.com/file.JSON?v=1#part')).toBe('json');
+    expect(getExt('.gitignore')).toBe('');
+    expect(getExt('README')).toBe('');
+});

@@ -1,68 +1,39 @@
-/**
- * @description: 设备的判断，判断是移动端还是PC端的用户
- * 最主要的是利用header头部的userAgent
- */
-export const detectDeviceType = () => {
-  const userAgent = navigator.userAgent.toLowerCase();
+export type DeviceType = "Mobile" | "PC" | "Unknown";
+export type BrowserType = "IE" | "Edge" | "Firefox" | "Chrome" | "Opera" | "Safari" | "Unknown";
 
-  // 检测是否为移动端
-  if (/mobile|android|iphone|ipad|ipod|windows phone|blackberry|webos|opera mini|iemobile|wpdesktop/i.test(userAgent)) {
-    return 'Mobile';
-  }
-
-  // 检测是否为PC端
-  if (/windows|macintosh|linux|unix/i.test(userAgent)) {
-    return 'PC';
-  }
-
-  // 如果不能确定，返回未知
-  return 'Unknown';
+export interface BrowserInfo {
+  type: BrowserType;
+  version: number;
 }
 
-/**
- * @description: 判断浏览器内核
- */
-export const checkBrowser = () => {
-  const t = (window as any).navigator.userAgent.toLowerCase();
-  return t.indexOf("msie") >= 0
-    ? {
-        // ie < 11
-        type: "IE",
-        version: Number(t.match(/msie ([\d]+)/)[1]),
-      }
-    : t.match(/trident\/.+?rv:(([\d.]+))/)
-    ? {
-        // ie 11
-        type: "IE",
-        version: 11,
-      }
-    : t.indexOf("edge") >= 0
-    ? {
-        type: "Edge",
-        version: Number(t.match(/edge\/([\d]+)/)[1]),
-      }
-    : t.indexOf("firefox") >= 0
-    ? {
-        type: "Firefox",
-        version: Number(t.match(/firefox\/([\d]+)/)[1]),
-      }
-    : t.indexOf("chrome") >= 0
-    ? {
-        type: "Chrome",
-        version: Number(t.match(/chrome\/([\d]+)/)[1]),
-      }
-    : t.indexOf("opera") >= 0
-    ? {
-        type: "Opera",
-        version: Number(t.match(/opera.([\d]+)/)[1]),
-      }
-    : t.indexOf("Safari") >= 0
-    ? {
-        type: "Safari",
-        version: Number(t.match(/version\/([\d]+)/)[1]),
-      }
-    : {
-        type: t,
-        version: -1,
-      };
+const currentUserAgent = (): string => {
+  return typeof navigator === "undefined" ? "" : navigator.userAgent;
+};
+
+/** 根据 User-Agent 判断设备大类。 */
+export const detectDeviceType = (userAgent = currentUserAgent()): DeviceType => {
+  if (/mobile|android|iphone|ipad|ipod|windows phone|blackberry|webos|opera mini|iemobile|wpdesktop/i.test(userAgent)) {
+    return "Mobile";
+  }
+  if (/windows|macintosh|linux|unix/i.test(userAgent)) return "PC";
+  return "Unknown";
+};
+
+/** 根据 User-Agent 判断浏览器及其主版本。 */
+export const checkBrowser = (userAgent = currentUserAgent()): BrowserInfo => {
+  const rules: Array<[BrowserType, RegExp]> = [
+    ["IE", /msie\s([\d.]+)/i],
+    ["IE", /trident\/.+?rv:([\d.]+)/i],
+    ["Edge", /(?:edg|edge)\/([\d.]+)/i],
+    ["Opera", /(?:opr|opera)[/ ]([\d.]+)/i],
+    ["Firefox", /firefox\/([\d.]+)/i],
+    ["Chrome", /(?:chrome|crios)\/([\d.]+)/i],
+    ["Safari", /version\/([\d.]+).+safari/i],
+  ];
+
+  for (const [type, pattern] of rules) {
+    const match = pattern.exec(userAgent);
+    if (match) return { type, version: Number.parseFloat(match[1]) };
+  }
+  return { type: "Unknown", version: -1 };
 };

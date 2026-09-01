@@ -6,7 +6,7 @@
 实用的工具集-tool，web的一些工具集函数,包括(树形菜单转换、本地存储、文件下载、文件大小单位转换、金额格式化、浏览器判断)等，一款来在工具库的爱！
 
 ## 简介
-特色，我们开发中一些实用的工具函数，分为二种打包模式esModule，global模式
+特色，我们开发中一些实用的工具函数，同时提供 ES Module、CommonJS 和浏览器全局变量三种引入方式。
 
 ## 安装下载
 
@@ -16,20 +16,30 @@
 
 ## 使用方法
 
-**esModule**
+**ES Module**
 
 ```javascript
-import {randomRgbColor, Storage} from 'hansen-tool';
+import { randomRgbColor, Storage } from 'hansen-tool';
 randomRgbColor();
-Storage.setStorage(key: string, value: string)
+Storage.setStorage('key', 'value');
 ```
 
-`global` ，可以直接调用cdn方式进行调用
+**CommonJS**
 
-```javascrip
-<script src="http://unpkg.com/hansen-tool"></script>
-hansenTool.randomRgbColor();
-hansenTool.Storage.setStorage(key: string, value: string)
+```javascript
+const { randomRgbColor, Storage } = require('hansen-tool');
+randomRgbColor();
+Storage.setStorage('key', 'value');
+```
+
+**浏览器全局变量**
+
+```html
+<script src="https://unpkg.com/hansen-tool"></script>
+<script>
+  HanTool.randomRgbColor();
+  HanTool.Storage.setStorage('key', 'value');
+</script>
 ```
 
 ## 相关函数的介绍

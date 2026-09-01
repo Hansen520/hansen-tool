@@ -1,1 +1,1 @@
-{"version":3,"file":"colorToTran.d.ts","sourceRoot":"","sources":["../src/colorToTran.ts"],"names":[],"mappings":"AAAA;;;;;GAKG;AACH,eAAO,MAAM,cAAc,SAAU,MAAM,WAS1C,CAAC;AAEF;;;;;GAKG;AACH,eAAO,MAAM,aAAa,QAAS,MAAM,WAUxC,CAAC;AAGA;;;;;EAKC;AACH,eAAO,MAAM,cAAc,QAAS,MAAM,2BAWzC,CAAC"}
+{"version":3,"file":"colorToTran.d.ts","sourceRoot":"","sources":["../src/colorToTran.ts"],"names":[],"mappings":"AAaA,6CAA6C;AAC7C,eAAO,MAAM,cAAc,GAAI,OAAO,MAAM,KAAG,MAiB9C,CAAC;AAEF,eAAO,MAAM,aAAa,GAAI,KAAK,MAAM,KAAG,MAG3C,CAAC;AAEF,eAAO,MAAM,cAAc,GAAI,KAAK,MAAM,EAAE,cAAS,KAAG,MAMvD,CAAC"}

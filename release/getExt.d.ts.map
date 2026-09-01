@@ -1,1 +1,1 @@
-{"version":3,"file":"getExt.d.ts","sourceRoot":"","sources":["../src/getExt.ts"],"names":[],"mappings":"AAIA;;;GAGG;AACH,eAAO,MAAM,MAAM,aAAc,MAAM,KAAG,MAEzC,CAAC"}
+{"version":3,"file":"getExt.d.ts","sourceRoot":"","sources":["../src/getExt.ts"],"names":[],"mappings":"AAAA,6BAA6B;AAC7B,eAAO,MAAM,MAAM,GAAI,UAAU,MAAM,KAAG,MAKzC,CAAC"}

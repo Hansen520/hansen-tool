@@ -1,11 +1,7 @@
-/*
- * @Date: 2025-01-08 11:18:23
- * @Description: 获取文件后缀名值
- */
-/**
- * @description: 获取文件的后缀名
- * @param {*} filename
- */
+/** 获取文件名或 URL 的扩展名，不包含点号。 */
 export const getExt = (filename: string): string => {
-    return (filename.split(".").pop() as string).toLocaleLowerCase();
+  const cleanName = filename.split(/[?#]/, 1)[0].replace(/\\/g, "/").split("/").pop() ?? "";
+  const lastDot = cleanName.lastIndexOf(".");
+  if (lastDot <= 0 || lastDot === cleanName.length - 1) return "";
+  return cleanName.slice(lastDot + 1).toLowerCase();
 };

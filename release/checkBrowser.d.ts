@@ -1,13 +1,11 @@
-/**
- * @description: 设备的判断，判断是移动端还是PC端的用户
- * 最主要的是利用header头部的userAgent
- */
-export declare const detectDeviceType: () => "Mobile" | "PC" | "Unknown";
-/**
- * @description: 判断浏览器内核
- */
-export declare const checkBrowser: () => {
-    type: any;
+export type DeviceType = "Mobile" | "PC" | "Unknown";
+export type BrowserType = "IE" | "Edge" | "Firefox" | "Chrome" | "Opera" | "Safari" | "Unknown";
+export interface BrowserInfo {
+    type: BrowserType;
     version: number;
-};
+}
+/** 根据 User-Agent 判断设备大类。 */
+export declare const detectDeviceType: (userAgent?: string) => DeviceType;
+/** 根据 User-Agent 判断浏览器及其主版本。 */
+export declare const checkBrowser: (userAgent?: string) => BrowserInfo;
 //# sourceMappingURL=checkBrowser.d.ts.map
